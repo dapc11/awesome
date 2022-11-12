@@ -1,42 +1,33 @@
---- Separating Multiple Monitor functions as a separeted module (taken from awesome wiki)
 local gtable = require("gears.table")
 local spawn = require("awful.spawn")
 local naughty = require("naughty")
 
--- A path to a fancy icon
 local icon_path = ""
 
--- Get active outputs
 local function outputs()
-  local outputs = {}
+  local active_outputs = {}
   local xrandr = io.popen("xrandr -q --current")
 
   if xrandr then
     for line in xrandr:lines() do
       local output = line:match("^([%w-]+) connected ")
       if output then
-        outputs[#outputs + 1] = output
+        active_outputs[#active_outputs + 1] = output
       end
     end
     xrandr:close()
   end
 
-  return outputs
+  return active_outputs
 end
 
 local function arrange(out)
-  -- We need to enumerate all permutations of horizontal outputs.
-
   local choices = {}
   local previous = { {} }
-  for i = 1, #out do
-    -- Find all permutation of length `i`: we take the permutation
-    -- of length `i-1` and for each of them, we create new
-    -- permutations by adding each output at the end of it if it is
-    -- not already present.
+  for _ = 1, #out do
     local new = {}
-    for _, p in pairs(previous) do
-      for _, o in pairs(out) do
+    for _, o in pairs(out) do
+      for _, p in pairs(previous) do
         if not gtable.hasitem(p, o) then
           new[#new + 1] = gtable.join(p, { o })
         end
@@ -49,7 +40,6 @@ local function arrange(out)
   return choices
 end
 
--- Build available choices
 local function menu()
   local menu = {}
   local out = outputs()
@@ -95,8 +85,7 @@ local state = {
 }
 
 local function naughty_destroy_callback(reason)
-  if
-    reason == naughty.notificationClosedReason.expired or reason == naughty.notificationClosedReason.dismissedByUser
+  if reason == naughty.notificationClosedReason.expired or reason == naughty.notificationClosedReason.dismissedByUser
   then
     local action = state.index and state.menu[state.index - 1][2]
     if action then
@@ -114,7 +103,7 @@ local function xrandr()
   end
 
   -- Select one and display the appropriate notification
-  local label, action
+  local label
   local next = state.menu[state.index]
   state.index = state.index + 1
 
@@ -122,7 +111,7 @@ local function xrandr()
     label = "Keep the current configuration"
     state.index = nil
   else
-    label, action = next[1], next[2]
+    label = next[1]
   end
   state.cid = naughty.notify({
     text = label,

@@ -3,7 +3,6 @@ local awful = require("awful")
 local theme = require("theme")
 local xrandr = require("xrandr")
 local revelation = require("revelation")
-local cyclefocus = require("cycle")
 local hotkeys_popup = require("awful.hotkeys_popup")
 
 local keybinds = {}
@@ -202,14 +201,6 @@ keybinds.clientkeys = gears.table.join(
     description = "move to screen",
     group = "client",
   }),
-  -- modkey+Tab: cycle through all clients.
-  awful.key({ theme.modkey }, "Tab", function(_)
-    cyclefocus.cycle({ modifier = "Super_L" })
-  end),
-  -- modkey+Shift+Tab: backwards
-  awful.key({ theme.modkey, "Shift" }, "Tab", function(_)
-    cyclefocus.cycle({ modifier = "Super_L" })
-  end),
   awful.key({ theme.modkey }, "Escape", awful.tag.history.restore),
   awful.key({ theme.modkey }, "e", revelation)
 )

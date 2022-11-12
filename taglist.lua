@@ -1,7 +1,9 @@
+local colors = require("colors")
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
 local theme = require("theme")
+local c = require("colors")
 local m = {}
 
 -- Create a wibox for each screen and add it
@@ -34,17 +36,17 @@ function m.create(screen)
     filter = awful.widget.taglist.filter.noempty,
     buttons = taglist_buttons,
     style = {
-      fg_focus = "#c9d1d9",
-      bg_focus = "#586069",
-      fg_urgent = "#484f58",
-      bg_urgent = "#ff7b72",
-      bg_occupied = "#2d333b",
-      fg_occupied = "#8b949e",
+      fg_focus = c.base06,
+      bg_focus = c.base03,
+      fg_urgent = c.base02,
+      bg_urgent = c.base08,
+      bg_occupied = c.base01,
+      fg_occupied = c.base05,
       bg_empty = nil,
       fg_empty = nil,
       spacing = 3,
-      bg_volatile = "#6cb6ff",
-      fg_volatile = "#2d333b",
+      bg_volatile = c.base0D,
+      fg_volatile = c.base00,
       shape = gears.shape.circle,
     },
     widget_template = {
@@ -72,11 +74,11 @@ function m.create(screen)
       -- Add support for hover colors and an index label
       create_callback = function(self, _, _, _)
         self:connect_signal("mouse::enter", function()
-          if self.bg ~= "#6e7681" then
+          if self.bg ~= c.base04 then
             self.backup = self.bg
             self.has_backup = true
           end
-          self.bg = "#6e7681"
+          self.bg = c.base04
         end)
         self:connect_signal("mouse::leave", function()
           if self.has_backup then

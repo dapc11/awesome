@@ -2,7 +2,7 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local utils = require("utils")
+local colors = require("colors")
 
 local HOME = os.getenv("HOME")
 local ICON_DIR = HOME .. "/.config/awesome/widgets/logout-menu-widget/icons/"
@@ -127,7 +127,7 @@ local function worker(user_args)
   logout_menu_widget:buttons(awful.util.table.join(awful.button({}, 1, function()
     if popup.visible then
       popup.visible = not popup.visible
-      logout_menu_widget:set_bg("#00000000")
+      logout_menu_widget:set_bg(colors.base00)
     else
       popup:move_next_to(mouse.current_widget_geometry)
       logout_menu_widget:set_bg(beautiful.bg_focus)
@@ -135,7 +135,7 @@ local function worker(user_args)
   end)))
 
   logout_menu_widget:connect_signal("mouse::leave", function()
-    logout_menu_widget:set_bg("#00000000")
+    logout_menu_widget:set_bg(colors.base00)
   end)
 
   return logout_menu_widget

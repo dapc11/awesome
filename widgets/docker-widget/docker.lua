@@ -15,6 +15,7 @@ local naughty = require("naughty")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local utils = require("utils")
+local colors = require("colors")
 
 local HOME_DIR = os.getenv("HOME")
 local WIDGET_DIR = HOME_DIR .. "/.config/awesome/widgets/docker-widget"
@@ -26,7 +27,7 @@ local LIST_CONTAINERS_CMD = [[bash -c "docker container ls -a -s -n %s]]
 --- Utility function to show warning messages
 local function show_warning(message)
   naughty.notify({
-    title = "Docker Widget",
+    title = "Docker",
     text = message,
   })
 end
@@ -143,7 +144,7 @@ local function worker(user_args)
             layout = wibox.container.margin,
           },
           shape = gears.shape.circle,
-          bg = "#00000000",
+          bg = colors.base00,
           widget = wibox.container.background,
         })
         local old_cursor, old_wibox
@@ -157,7 +158,7 @@ local function worker(user_args)
           c:get_children_by_id("icon")[1]:emit_signal("widget::redraw_needed")
         end)
         start_stop_button:connect_signal("mouse::leave", function(c)
-          c:set_bg("#00000000")
+          c:set_bg(colors.base00)
           if old_wibox then
             old_wibox.cursor = old_cursor
             old_wibox = nil
@@ -206,12 +207,12 @@ local function worker(user_args)
             layout = wibox.container.margin,
           },
           shape = gears.shape.circle,
-          bg = "#00000000",
+          bg = colors.base00,
           widget = wibox.container.background,
         })
         local old_cursor, old_wibox
         pause_unpause_button:connect_signal("mouse::enter", function(c)
-          c:set_bg("#3B4252")
+          c:set_bg(colors.base03)
           local wb = mouse.current_wibox
           old_cursor, old_wibox = wb.cursor, wb
           wb.cursor = "hand1"
@@ -219,7 +220,7 @@ local function worker(user_args)
           c:get_children_by_id("icon")[1]:emit_signal("widget::redraw_needed")
         end)
         pause_unpause_button:connect_signal("mouse::leave", function(c)
-          c:set_bg("#00000000")
+          c:set_bg(colors.base00)
           if old_wibox then
             old_wibox.cursor = old_cursor
             old_wibox = nil
@@ -270,7 +271,7 @@ local function worker(user_args)
             layout = wibox.container.margin,
           },
           shape = gears.shape.circle,
-          bg = "#00000000",
+          bg = colors.base00,
           widget = wibox.container.background,
         })
         delete_button:buttons(gears.table.join(awful.button({}, 1, function()
@@ -286,7 +287,7 @@ local function worker(user_args)
 
         local old_cursor, old_wibox
         delete_button:connect_signal("mouse::enter", function(c)
-          c:set_bg("#3B4252")
+          c:set_bg(colors.base03)
           local wb = mouse.current_wibox
           old_cursor, old_wibox = wb.cursor, wb
           wb.cursor = "hand1"
@@ -294,7 +295,7 @@ local function worker(user_args)
           c:get_children_by_id("icon")[1]:emit_signal("widget::redraw_needed")
         end)
         delete_button:connect_signal("mouse::leave", function(c)
-          c:set_bg("#00000000")
+          c:set_bg(colors.base00)
           if old_wibox then
             old_wibox.cursor = old_cursor
             old_wibox = nil
@@ -375,7 +376,7 @@ local function worker(user_args)
 
   docker_widget:buttons(gears.table.join(awful.button({}, 1, function()
     if popup.visible then
-      docker_widget:set_bg("#00000000")
+      docker_widget:set_bg(colors.base00)
       popup.visible = not popup.visible
     else
       docker_widget:set_bg(beautiful.bg_focus)
@@ -387,7 +388,7 @@ local function worker(user_args)
   end)))
 
   docker_widget:connect_signal("mouse::leave", function()
-    docker_widget:set_bg("#00000000")
+    docker_widget:set_bg(colors.base00)
     if popup.visible then
       utils.sleep(5)
       popup.visible = not popup.visible

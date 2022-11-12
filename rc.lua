@@ -15,6 +15,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local revelation = require("revelation")
+local colors = require("colors")
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -66,8 +67,6 @@ end
 revelation.init()
 local theme = require("theme")
 beautiful.font = theme.font
-local terminal = "alacritty"
-
 awful.layout.layouts = {
   awful.layout.suit.tile,
   awful.layout.suit.max,
@@ -76,7 +75,7 @@ awful.layout.layouts = {
 }
 
 -- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+menubar.utils.terminal = theme.terminal -- Set the terminal for applications that require it
 
 --  Wibar
 -- Create a textclock widget
@@ -156,15 +155,15 @@ awful.screen.connect_for_each_screen(function(screen)
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
       volume({
-        font = "SF Pro Display 11",
-        unselected = "#586069",
-        selected = "#ff7b72",
+        font = theme.font,
+        unselected = colors.base03,
+        selected = colors.base08,
       }),
       separator,
       docker({}),
       separator,
       battery({
-        font = "SF Pro Display 11",
+        font = theme.font,
         show_current_level = true,
       }),
       separator,
@@ -219,8 +218,8 @@ awful.rules.rules = { -- All clients will match this rule.
   {
     rule = {},
     properties = {
-      border_width = beautiful.border_width,
-      border_color = beautiful.border_normal,
+      border_width = theme.border_width,
+      border_color = theme.border_normal,
       focus = awful.client.focus.filter,
       raise = true,
       keys = keybinds.clientkeys,
