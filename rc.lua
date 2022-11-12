@@ -17,6 +17,7 @@ local menubar = require("menubar")
 local revelation = require("revelation")
 local colors = require("colors")
 
+
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -66,6 +67,9 @@ if not beautiful.init(theme_path) then
 end
 revelation.init()
 local theme = require("theme")
+local bling = require("bling")
+bling.module.window_swallowing.start()
+
 beautiful.font = theme.font
 awful.layout.layouts = {
   awful.layout.suit.tile,

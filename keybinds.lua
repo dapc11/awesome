@@ -4,9 +4,36 @@ local theme = require("theme")
 local xrandr = require("xrandr")
 local revelation = require("revelation")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local bling = require("bling")
+
+local term_scratch = bling.module.scratchpad({
+  command = "alacritty --class spad", -- How to spawn the scratchpad
+  rule = { instance = "spad" }, -- The rule that the scratchpad will be searched by
+  sticky = true, -- Whether the scratchpad should be sticky
+  autoclose = true, -- Whether it should hide itself when losing focus
+  floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
+  geometry = { x = 360, y = 90, height = 900, width = 1200 }, -- The geometry in a floating state
+  reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
+  dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
+})
 
 local keybinds = {}
 keybinds.globalkeys = gears.table.join(
+  awful.key({ theme.modkey }, "Tab", function()
+    local c = awful.client.focus.history.list[2]
+    client.focus = c
+    local t = client.focus and client.focus.first_tag or nil
+    if t then
+      t:view_only()
+    end
+    c:raise()
+  end, { description = "go back", group = "client" }),
+  awful.key({ theme.modkey }, "+", function()
+    term_scratch:toggle()
+  end, {
+    description = "focus previous by index",
+    group = "client",
+  }),
   awful.key({ theme.modkey }, "Down", function()
     awful.client.focus.byidx(1)
   end, {
@@ -63,22 +90,10 @@ keybinds.globalkeys = gears.table.join(
     description = "reload awesome",
     group = "awesome",
   }),
-  awful.key({ theme.modkey }, "s", function()
-    awful.spawn("rofi -normal-window -show window -theme ~/.config/rofi/config")
-  end, {
-    description = "switch window",
-    group = "launcher",
-  }),
   awful.key({ theme.modkey }, "d", function()
     awful.spawn("rofi -normal-window -show drun -display-drun '' -modi drun -theme ~/.config/rofi/config")
   end, {
     description = "launch application",
-    group = "launcher",
-  }),
-  awful.key({ theme.modkey }, "BackSpace", function()
-    awful.spawn("/home/dapc/.config/awesome/sysact")
-  end, {
-    description = "session management",
     group = "launcher",
   }),
   awful.key({ theme.modkey, "Shift" }, "q", awesome.quit, {
