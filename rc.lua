@@ -17,7 +17,6 @@ local menubar = require("menubar")
 local revelation = require("revelation")
 local colors = require("colors")
 
-
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
@@ -52,7 +51,6 @@ do
 end
 -- Widgets
 local battery = require("widgets.battery-widget.battery")
-local docker = require("widgets.docker-widget.docker")
 local volume = require("widgets.volume-widget.volume")
 local logout_menu = require("widgets.logout-menu-widget.logout-menu")
 
@@ -100,7 +98,7 @@ end
 screen.connect_signal("property::geometry", set_wallpaper)
 
 local separator = wibox.widget({
-  font = font,
+  font = theme.font,
   text = "|",
   opacity = 0.3,
   forced_width = 20,
@@ -154,7 +152,7 @@ awful.screen.connect_for_each_screen(function(screen)
     },
     {
       layout = wibox.layout.flex.horizontal,
-      screen.mytasklist, -- Middle widget
+      { layout = wibox.layout.fixed.horizontal, spacing = 5, screen.mytasklist }, -- Middle widget
     },
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
@@ -163,8 +161,6 @@ awful.screen.connect_for_each_screen(function(screen)
         unselected = colors.base03,
         selected = colors.base08,
       }),
-      separator,
-      docker({}),
       separator,
       battery({
         font = theme.font,
@@ -216,6 +212,7 @@ local function rule(class, screen, tag)
     },
   }
 end
+
 --  Rules
 -- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = { -- All clients will match this rule.

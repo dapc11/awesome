@@ -217,7 +217,7 @@ keybinds.clientkeys = gears.table.join(
     group = "client",
   }),
   awful.key({ theme.modkey }, "Escape", awful.tag.history.restore),
-  awful.key({ theme.modkey }, "e", revelation)
+  awful.key({ theme.modkey }, "s", revelation)
 )
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.
