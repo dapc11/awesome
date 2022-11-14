@@ -136,6 +136,12 @@ keybinds.globalkeys = gears.table.join(
     description = "decrease the number of columns",
     group = "layout",
   }),
+  awful.key({ theme.modkey, "Shift" }, "<", function()
+    awful.screen.focus_relative(-1)
+  end, {
+    description = "focus the next screen",
+    group = "screen",
+  }),
   awful.key({ theme.modkey }, "<", function()
     awful.screen.focus_relative(1)
   end, {
@@ -210,8 +216,15 @@ keybinds.clientkeys = gears.table.join(
     description = "toggle keep on top",
     group = "client",
   }),
-  awful.key({ theme.modkey, "Control" }, "<", function(c)
+  awful.key({ theme.modkey, "Shift", "Control" }, "<", function(c)
     c:move_to_screen()
+  end, {
+    description = "move to screen",
+    group = "client",
+  }),
+  awful.key({ theme.modkey, "Control" }, "<", function(c)
+    local index = c.screen.index
+    c:move_to_screen(index - 1)
   end, {
     description = "move to screen",
     group = "client",
