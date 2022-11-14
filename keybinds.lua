@@ -12,6 +12,16 @@ local term_scratch = bling.module.scratchpad({
   sticky = true, -- Whether the scratchpad should be sticky
   autoclose = true, -- Whether it should hide itself when losing focus
   floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
+  geometry = { x = 0, y = 0, height = 900, width = 100% }, -- The geometry in a floating state
+  reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
+  dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
+})
+local spotify_scratch = bling.module.scratchpad({
+  command = "spotfy", -- How to spawn the scratchpad
+  rule = { instance = "spotify" }, -- The rule that the scratchpad will be searched by
+  sticky = true, -- Whether the scratchpad should be sticky
+  autoclose = true, -- Whether it should hide itself when losing focus
+  floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
   geometry = { x = 360, y = 90, height = 900, width = 1200 }, -- The geometry in a floating state
   reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
   dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
@@ -29,9 +39,15 @@ keybinds.globalkeys = gears.table.join(
     c:raise()
   end, { description = "go back", group = "client" }),
   awful.key({ theme.modkey }, "+", function()
+    spotify_scratch:toggle()
+  end, {
+    description = "toggle spotify",
+    group = "client",
+  }),
+  awful.key({ theme.modkey }, "dead_acute", function()
     term_scratch:toggle()
   end, {
-    description = "focus previous by index",
+    description = "toggle terminal",
     group = "client",
   }),
   awful.key({ theme.modkey }, "Down", function()
@@ -96,10 +112,6 @@ keybinds.globalkeys = gears.table.join(
     description = "launch application",
     group = "launcher",
   }),
-  awful.key({ theme.modkey, "Shift" }, "q", awesome.quit, {
-    description = "quit awesome",
-    group = "awesome",
-  }),
   awful.key({ theme.modkey }, "l", function()
     awful.tag.incmwfact(0.05)
   end, {
@@ -136,13 +148,13 @@ keybinds.globalkeys = gears.table.join(
     description = "decrease the number of columns",
     group = "layout",
   }),
-  awful.key({ theme.modkey, "Shift" }, "<", function()
+  awful.key({ theme.modkey }, "Left", function()
     awful.screen.focus_relative(-1)
   end, {
-    description = "focus the next screen",
+    description = "focus the previous screen",
     group = "screen",
   }),
-  awful.key({ theme.modkey }, "<", function()
+  awful.key({ theme.modkey }, "Right", function()
     awful.screen.focus_relative(1)
   end, {
     description = "focus the next screen",
@@ -204,32 +216,19 @@ keybinds.clientkeys = gears.table.join(
     description = "move to master",
     group = "client",
   }),
-  awful.key({ theme.modkey }, "o", function(c)
-    c:move_to_screen()
-  end, {
-    description = "move to screen",
-    group = "client",
-  }),
-  awful.key({ theme.modkey }, "t", function(c)
-    c.ontop = not c.ontop
-  end, {
-    description = "toggle keep on top",
-    group = "client",
-  }),
-  awful.key({ theme.modkey, "Shift", "Control" }, "<", function(c)
+  awful.key({ theme.modkey, "Control" }, "<", function(c)
     local index = c.screen.index
     c:move_to_screen(index - 1)
   end, {
-    description = "move to screen",
+    description = "move to previous screen",
     group = "client",
   }),
-  awful.key({ theme.modkey, "Control" }, "<", function(c)
+  awful.key({ theme.modkey }, "<", function(c)
     c:move_to_screen()
   end, {
-    description = "move to screen",
+    description = "move to next screen",
     group = "client",
   }),
-  awful.key({ theme.modkey }, "Escape", awful.tag.history.restore),
   awful.key({ theme.modkey }, "s", revelation)
 )
 -- Bind all key numbers to tags.
