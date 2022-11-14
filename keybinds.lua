@@ -217,14 +217,14 @@ keybinds.clientkeys = gears.table.join(
     group = "client",
   }),
   awful.key({ theme.modkey, "Shift", "Control" }, "<", function(c)
-    c:move_to_screen()
+    local index = c.screen.index
+    c:move_to_screen(index - 1)
   end, {
     description = "move to screen",
     group = "client",
   }),
   awful.key({ theme.modkey, "Control" }, "<", function(c)
-    local index = c.screen.index
-    c:move_to_screen(index - 1)
+    c:move_to_screen()
   end, {
     description = "move to screen",
     group = "client",
