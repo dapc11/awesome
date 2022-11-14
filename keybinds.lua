@@ -47,7 +47,7 @@ keybinds.globalkeys = gears.table.join(
     group = "client",
   }),
   awful.key({ theme.modkey }, "w", function()
-    awful.spawn("firefox")
+    awful.spawn("x-www-browser")
   end, {
     description = "launch browser",
     group = "launcher",
