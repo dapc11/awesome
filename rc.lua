@@ -71,6 +71,8 @@ bling.module.window_swallowing.start()
 beautiful.font = theme.font
 awful.layout.layouts = {
   awful.layout.suit.tile,
+  bling.layout.mstab,
+  bling.layout.centered,
   awful.layout.suit.max,
   awful.layout.suit.floating,
   awful.layout.suit.tile.bottom,
