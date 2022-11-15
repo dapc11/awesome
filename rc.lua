@@ -233,6 +233,20 @@ awful.rules.rules = { -- All clients will match this rule.
   }, -- Floating clients.
   {
     rule_any = {
+      name = {
+        "GlobalProtect",
+      },
+      class = {
+        "PanGPUI",
+      },
+    },
+    properties = {
+      floating = true,
+      placement = awful.placement.top_right,
+    },
+  },
+  {
+    rule_any = {
       instance = {
         "DTA", -- Firefox addon DownThemAll.
         "copyq", -- Includes session name in class.
