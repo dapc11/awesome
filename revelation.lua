@@ -210,9 +210,9 @@ function revelation.expose(args)
 end
 
 function revelation.restore(t, zt)
-  for scr = 1, capi.screen.count() do
+  for scr in capi.screen do
     awful.tag.history.restore(scr)
-    t[scr].screen = nil
+    scr = nil
   end
 
   capi.keygrabber.stop()
