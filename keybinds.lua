@@ -188,11 +188,13 @@ keybinds.globalkeys = gears.table.join(
     description = "restore minimized",
     group = "client",
   }),
+  awful.key({ theme.modkey }, "s", revelation),
+
   awful.key({ theme.modkey }, "r", function()
     awful.screen.focused().mypromptbox:run()
   end),
   awful.key({ theme.modkey }, "i", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
-  awful.key({ }, "Print", function()
+  awful.key({}, "Print", function()
     spawn.easy_async([[sh -c 'pacmd list-cards | grep index | tail -1 | xargs | cut -d" " -f 2']], function(stdout)
       local index = stdout:gsub("[\n\r]", " ")
       spawn.easy_async(string.format([[sh -c 'pactl set-card-profile %s a2dp_sink']], index), function() end)
@@ -215,22 +217,19 @@ keybinds.globalkeys = gears.table.join(
   end, { description = "mute microphone", group = "sound" }),
   awful.key({}, "XF86AudioPrev", function()
     spawn.easy_async(
-      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous']]
-      ,
+      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous']],
       function() end
     )
   end, { description = "previous song", group = "sound" }),
   awful.key({}, "XF86AudioPlay", function()
     spawn.easy_async(
-      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause']]
-      ,
+      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause']],
       function() end
     )
   end, { description = "play/pause song", group = "sound" }),
   awful.key({}, "XF86AudioNext", function()
     spawn.easy_async(
-      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next']]
-      ,
+      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next']],
       function() end
     )
   end, { description = "next song", group = "sound" }),
