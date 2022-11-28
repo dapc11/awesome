@@ -45,7 +45,7 @@ local function worker(user_args)
     awesome.quit()
   end
   local onlock = args.onlock or function()
-    awful.spawn.with_shell("i3lock")
+    awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
   end
   local onreboot = args.onreboot or function()
     awful.spawn.with_shell("reboot")
