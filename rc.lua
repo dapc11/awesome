@@ -280,8 +280,6 @@ awful.rules.rules = { -- All clients will match this rule.
       titlebars_enabled = theme.titlebars_enabled,
     },
   },
-  rule("Google-chrome", 1, "2"),
-  rule("Firefox", 1, "2"),
   rule("Evolution", 1, "1"),
   rule("Jetbrains-idea-ce", 1, "3"),
   rule("Jetbrains-pycharm-ce", 1, "3"),

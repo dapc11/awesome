@@ -66,8 +66,8 @@ theme.titlebar_sticky_button_focus_inactive = themes_path .. "titlebar/sticky_fo
 theme.titlebar_sticky_button_normal_active = themes_path .. "titlebar/sticky_normal_active.png"
 theme.titlebar_sticky_button_normal_inactive = themes_path .. "titlebar/sticky_normal_inactive.png"
 
-theme.parent_filter_list = { "firefox", "Gimp", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution" } -- class names list of parents that should not be swallowed
-theme.child_filter_list = { "Dragon", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution" } -- class names list that should not swallow their parents
+theme.parent_filter_list = { "Google-chrome", "firefox", "Gimp", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution" } -- class names list of parents that should not be swallowed
+theme.child_filter_list = { "Dragon", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution", "Google-chrome" } -- class names list that should not swallow their parents
 theme.swallowing_filter = true -- whether the filters above should be active
 
 return theme
