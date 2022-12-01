@@ -1,88 +1,73 @@
 local xresources = require("beautiful.xresources")
 local gears = require("gears")
+local c = require("colors")
 local dpi = xresources.apply_dpi
 
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir() .. "/icons/"
 
-local m = {}
-local font_size = 11
+local theme = {}
+theme.font = "SF Pro Display 11"
+theme.gap_single_client = false
+theme.modkey = "Mod4"
+theme.notification_max_width = dpi(500)
+theme.notification_shape = gears.shape.rounded_rect
+theme.systray_icon_spacing = dpi(5)
+theme.terminal = "alacritty"
+theme.titlebars_enabled = false
+theme.useless_gap = dpi(7)
+theme.wallpaper = os.getenv("HOME") .. "/.local/background.jpg"
 
-m.modkey = "Mod4"
-m.terminal = "wezterm"
+theme.bg_dark = c.base00
+theme.bg_focus = c.base02
+theme.bg_minimize = c.base03
+theme.bg_normal = c.base01
+theme.bg_systray = c.base01
+theme.bg_urgent = c.base08
 
-m.font_name = "SF Pro Display"
-m.font = m.font_name .. " " .. font_size
-m.wallpaper = os.getenv("HOME") .. "/.local/background.jpg"
--- Background
-m.bg_normal = "#2d333b"
-m.bg_dark = "#24292e"
-m.bg_focus = nil
-m.bg_urgent = "#ff7b72"
-m.bg_minimize = "#586069"
+theme.border_focus = c.base04
+theme.border_marked = c.base08
+theme.border_normal = c.base01
+theme.border_width = dpi(1)
 
--- Foreground
-m.fg_normal = "#c9d1d9"
-m.fg_focus = ""
-m.fg_urgent = "#24292e"
-m.fg_minimize = "#8b949e"
+theme.fg_focus = c.none
+theme.fg_minimize = c.base05
+theme.fg_normal = c.base06
+theme.fg_urgent = c.base00
 
--- Window Gap Distance
-m.useless_gap = dpi(7)
+theme.notification_bg = c.base01
+theme.notification_font = theme.font
 
--- Do Not Show Gaps if Only One Client is Visible
-m.gap_single_client = false
+theme.tasklist_font = theme.font
 
--- Window Borders
-m.border_width = dpi(1)
-m.border_normal = m.bg_normal
-m.border_focus = "#6e7681"
-m.border_marked = m.fg_urgent
+theme.titlebar_close_button_focus = themes_path .. "titlebar/close_focus.png"
+theme.titlebar_close_button_normal = themes_path .. "titlebar/close_normal.png"
 
--- Tasklist
-m.tasklist_font = m.font
+theme.titlebar_floating_button_focus_active = themes_path .. "titlebar/floating_focus_active.png"
+theme.titlebar_floating_button_focus_inactive = themes_path .. "titlebar/floating_focus_inactive.png"
+theme.titlebar_floating_button_normal_active = themes_path .. "titlebar/floating_normal_active.png"
+theme.titlebar_floating_button_normal_inactive = themes_path .. "titlebar/floating_normal_inactive.png"
 
--- Notifications
-m.notification_max_width = dpi(500)
-m.notification_bg = "#2d333b"
-m.notification_shape = gears.shape.rounded_rect
-m.notification_font = m.font
+theme.titlebar_maximized_button_focus_active = themes_path .. "titlebar/maximized_focus_active.png"
+theme.titlebar_maximized_button_focus_inactive = themes_path .. "titlebar/maximized_focus_inactive.png"
+theme.titlebar_maximized_button_normal_active = themes_path .. "titlebar/maximized_normal_active.png"
+theme.titlebar_maximized_button_normal_inactive = themes_path .. "titlebar/maximized_normal_inactive.png"
 
--- System Tray
-m.bg_systray = m.bg_normal
-m.systray_icon_spacing = dpi(5)
+theme.titlebar_minimize_button_focus = themes_path .. "titlebar/minimize_focus.png"
+theme.titlebar_minimize_button_normal = themes_path .. "titlebar/minimize_normal.png"
 
--- Titlebars
-m.titlebars_enabled = false
--- Define the image to load
-m.titlebar_close_button_normal = themes_path .. "titlebar/close_normal.png"
-m.titlebar_close_button_focus = themes_path .. "titlebar/close_focus.png"
+theme.titlebar_ontop_button_focus_active = themes_path .. "titlebar/ontop_focus_active.png"
+theme.titlebar_ontop_button_focus_inactive = themes_path .. "titlebar/ontop_focus_inactive.png"
+theme.titlebar_ontop_button_normal_active = themes_path .. "titlebar/ontop_normal_active.png"
+theme.titlebar_ontop_button_normal_inactive = themes_path .. "titlebar/ontop_normal_inactive.png"
 
-m.titlebar_minimize_button_normal = themes_path .. "titlebar/minimize_normal.png"
-m.titlebar_minimize_button_focus = themes_path .. "titlebar/minimize_focus.png"
+theme.titlebar_sticky_button_focus_active = themes_path .. "titlebar/sticky_focus_active.png"
+theme.titlebar_sticky_button_focus_inactive = themes_path .. "titlebar/sticky_focus_inactive.png"
+theme.titlebar_sticky_button_normal_active = themes_path .. "titlebar/sticky_normal_active.png"
+theme.titlebar_sticky_button_normal_inactive = themes_path .. "titlebar/sticky_normal_inactive.png"
 
-m.titlebar_ontop_button_normal_inactive = themes_path .. "titlebar/ontop_normal_inactive.png"
-m.titlebar_ontop_button_focus_inactive = themes_path .. "titlebar/ontop_focus_inactive.png"
-m.titlebar_ontop_button_normal_active = themes_path .. "titlebar/ontop_normal_active.png"
-m.titlebar_ontop_button_focus_active = themes_path .. "titlebar/ontop_focus_active.png"
+theme.parent_filter_list = { "google-chrome", "Google-chrome", "firefox", "Gimp", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution", "Firefox" } -- class names list of parents that should not be swallowed
+theme.child_filter_list = { "Dragon", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution", "Google-chrome", "google-chrome", "firefox", "Firefox" } -- class names list that should not swallow their parents
+theme.swallowing_filter = true -- whether the filters above should be active
 
-m.titlebar_sticky_button_normal_inactive = themes_path .. "titlebar/sticky_normal_inactive.png"
-m.titlebar_sticky_button_focus_inactive = themes_path .. "titlebar/sticky_focus_inactive.png"
-m.titlebar_sticky_button_normal_active = themes_path .. "titlebar/sticky_normal_active.png"
-m.titlebar_sticky_button_focus_active = themes_path .. "titlebar/sticky_focus_active.png"
-
-m.titlebar_floating_button_normal_inactive = themes_path .. "titlebar/floating_normal_inactive.png"
-m.titlebar_floating_button_focus_inactive = themes_path .. "titlebar/floating_focus_inactive.png"
-m.titlebar_floating_button_normal_active = themes_path .. "titlebar/floating_normal_active.png"
-m.titlebar_floating_button_focus_active = themes_path .. "titlebar/floating_focus_active.png"
-
-m.titlebar_maximized_button_normal_inactive = themes_path .. "titlebar/maximized_normal_inactive.png"
-m.titlebar_maximized_button_focus_inactive = themes_path .. "titlebar/maximized_focus_inactive.png"
-m.titlebar_maximized_button_normal_active = themes_path .. "titlebar/maximized_normal_active.png"
-m.titlebar_maximized_button_focus_active = themes_path .. "titlebar/maximized_focus_active.png"
-
-m.parent_filter_list = { "Google-chrome", "firefox", "Gimp", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution" } -- class names list of parents that should not be swallowed
-m.child_filter_list = { "Dragon", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution", "Google-chrome" } -- class names list that should not swallow their parents
-m.swallowing_filter = false -- whether the filters above should be active
-
-return m
+return theme

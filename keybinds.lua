@@ -1,13 +1,58 @@
 local gears = require("gears")
+local naughty = require("naughty")
+local spawn = require("awful.spawn")
 local awful = require("awful")
 local theme = require("theme")
 local xrandr = require("xrandr")
 local revelation = require("revelation")
-local cyclefocus = require("cycle")
 local hotkeys_popup = require("awful.hotkeys_popup")
+local bling = require("bling")
+local colors = require("colors")
+
+local term_scratch = bling.module.scratchpad({
+  command = "alacritty --class spad", -- How to spawn the scratchpad
+  rule = { instance = "spad" }, -- The rule that the scratchpad will be searched by
+  sticky = true, -- Whether the scratchpad should be sticky
+  autoclose = false, -- Whether it should hide itself when losing focus
+  floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
+  geometry = { x = 0, y = 0, height = 900, width = 1200 }, -- The geometry in a floating state
+  reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
+  dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
+})
+local spotify_scratch = bling.module.scratchpad({
+  command = "spotfy", -- How to spawn the scratchpad
+  rule = { instance = "spotify" }, -- The rule that the scratchpad will be searched by
+  sticky = true, -- Whether the scratchpad should be sticky
+  autoclose = false, -- Whether it should hide itself when losing focus
+  floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
+  geometry = { x = 360, y = 90, height = 900, width = 1200 }, -- The geometry in a floating state
+  reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
+  dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
+})
 
 local keybinds = {}
 keybinds.globalkeys = gears.table.join(
+  awful.key({ theme.modkey }, "Tab", function()
+    local c = awful.client.focus.history.list[2]
+    client.focus = c
+    local t = client.focus and client.focus.first_tag or nil
+    if t then
+      t:view_only()
+    end
+    c:raise()
+  end, { description = "go back", group = "client" }),
+  awful.key({ theme.modkey }, "+", function()
+    spotify_scratch:toggle()
+  end, {
+    description = "toggle spotify",
+    group = "client",
+  }),
+  awful.key({ theme.modkey }, "dead_acute", function()
+    term_scratch:toggle()
+  end, {
+    description = "toggle terminal",
+    group = "client",
+  }),
   awful.key({ theme.modkey }, "Down", function()
     awful.client.focus.byidx(1)
   end, {
@@ -21,7 +66,7 @@ keybinds.globalkeys = gears.table.join(
     group = "client",
   }),
   awful.key({ theme.modkey }, "w", function()
-    awful.spawn("firefox")
+    awful.spawn("x-www-browser")
   end, {
     description = "launch browser",
     group = "launcher",
@@ -64,27 +109,11 @@ keybinds.globalkeys = gears.table.join(
     description = "reload awesome",
     group = "awesome",
   }),
-  awful.key({ theme.modkey }, "s", function()
-    awful.spawn("rofi -normal-window -show window -theme ~/.config/rofi/config")
-  end, {
-    description = "switch window",
-    group = "launcher",
-  }),
   awful.key({ theme.modkey }, "d", function()
     awful.spawn("rofi -normal-window -show drun -display-drun '' -modi drun -theme ~/.config/rofi/config")
   end, {
     description = "launch application",
     group = "launcher",
-  }),
-  awful.key({ theme.modkey }, "BackSpace", function()
-    awful.spawn("/home/dapc/.config/awesome/sysact")
-  end, {
-    description = "session management",
-    group = "launcher",
-  }),
-  awful.key({ theme.modkey, "Shift" }, "q", awesome.quit, {
-    description = "quit awesome",
-    group = "awesome",
   }),
   awful.key({ theme.modkey }, "l", function()
     awful.tag.incmwfact(0.05)
@@ -157,7 +186,62 @@ keybinds.globalkeys = gears.table.join(
   awful.key({ theme.modkey }, "r", function()
     awful.screen.focused().mypromptbox:run()
   end),
+<<<<<<< HEAD
   awful.key({ theme.modkey }, "i", hotkeys_popup.show_help, { description = "show help", group = "awesome" })
+=======
+  awful.key({ theme.modkey }, "i", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
+  awful.key({}, "Print", function()
+    spawn.easy_async([[sh -c 'pacmd list-cards | grep index | tail -1 | xargs | cut -d" " -f 2']], function(stdout)
+      local index = stdout:gsub("[\n\r]", " ")
+      spawn.easy_async(string.format([[sh -c 'pactl set-card-profile %s a2dp_sink']], index), function() end)
+    end)
+  end, {
+    description = "Set hifi audio profile",
+    group = "sound",
+  }),
+  awful.key({ theme.modkey }, "section", function()
+    spawn.easy_async([[sh -c 'pacmd list-cards | grep index | tail -1 | xargs | cut -d" " -f 2']], function(stdout)
+      local index = stdout:gsub("[\n\r]", " ")
+      spawn.easy_async(string.format([[sh -c 'pactl set-card-profile %s a2dp_sink']], index), function() end)
+    end)
+  end, {
+    description = "Set hifi audio profile",
+    group = "sound",
+  }),
+  awful.key({}, "XF86AudioMicMute", function()
+    spawn.easy_async([[sh -c 'pactl set-source-mute @DEFAULT_SOURCE@ toggle']], function() end)
+  end, { description = "mute microphone", group = "sound" }),
+  awful.key({}, "XF86AudioPrev", function()
+    spawn.easy_async(
+      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous']],
+      function() end
+    )
+  end, { description = "previous song", group = "sound" }),
+  awful.key({}, "XF86AudioPlay", function()
+    spawn.easy_async(
+      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause']],
+      function() end
+    )
+  end, { description = "play/pause song", group = "sound" }),
+  awful.key({}, "XF86AudioNext", function()
+    spawn.easy_async(
+      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next']],
+      function() end
+    )
+  end, { description = "next song", group = "sound" }),
+  awful.key({}, "XF86AudioMute", function()
+    spawn.easy_async([[sh -c 'amixer -D pulse -q set Master toggle']], function() end)
+  end, { description = "toggle mtue volume", group = "sound" }),
+  awful.key({}, "XF86AudioLowerVolume", function()
+    spawn.easy_async([[sh -c 'amixer -q -D pulse sset Master 3%- unmute']], function() end)
+  end, { description = "descrease volume", group = "sound" }),
+  awful.key({}, "XF86AudioRaiseVolume", function()
+    spawn.easy_async([[sh -c 'amixer -q -D pulse sset Master 3%+ unmute']], function() end)
+  end, { description = "increase volume", group = "sound" }),
+  awful.key({ "Ctrl" }, "l", function()
+    awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
+  end)
+>>>>>>> Fixes
 )
 
 keybinds.clientkeys = gears.table.join(
