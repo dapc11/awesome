@@ -1,86 +1,94 @@
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
-local theme = require("theme")
-local c = require("colors")
+local xresources = require("beautiful.xresources")
+local dpi = xresources.apply_dpi
 local m = {}
 
--- Create a wibox for each screen and add it
-local taglist_buttons = gears.table.join(
-  awful.button({}, 1, function(t)
-    t:view_only()
-  end),
-  awful.button({ theme.modkey }, 1, function(t)
-    if client.focus then
-      client.focus:move_to_tag(t)
-    end
-  end),
-  awful.button({}, 3, awful.tag.viewtoggle),
-  awful.button({ theme.modkey }, 3, function(t)
-    if client.focus then
-      client.focus:toggle_tag(t)
-    end
-  end)
-)
+------------------------------------
 
-function m.create(screen)
-  return awful.widget.taglist({
-    screen = screen,
-    filter = awful.widget.taglist.filter.noempty,
-    buttons = taglist_buttons,
-    style = {
-      fg_focus = c.base06,
-      bg_focus = c.base03,
-      fg_urgent = c.base02,
-      bg_urgent = c.base08,
-      bg_occupied = c.base01,
-      fg_occupied = c.base05,
-      bg_empty = nil,
-      fg_empty = nil,
-      spacing = 3,
-      bg_volatile = c.base0D,
-      fg_volatile = c.base00,
-      shape = gears.shape.circle,
-    },
+m.create = function(s)
+  -- Taglist buttons
+  local taglist_buttons = gears.table.join(
+    awful.button({}, 1, function(t)
+      t:view_only()
+    end),
+    awful.button({ modkey }, 1, function(t)
+      if client.focus then
+        client.focus:move_to_tag(t)
+      end
+    end),
+    awful.button({}, 3, awful.tag.viewtoggle),
+    awful.button({ modkey }, 3, function(t)
+      if client.focus then
+        client.focus:toggle_tag(t)
+      end
+    end),
+    awful.button({}, 4, function(t)
+      awful.tag.viewnext(t.screen)
+    end),
+    awful.button({}, 5, function(t)
+      awful.tag.viewprev(t.screen)
+    end)
+  )
+
+  ----------------------------------------------------------------------
+
+  local unfocus_icon = ""
+  local unfocus_color = "#8b949e"
+
+  local empty_icon = ""
+  local empty_color = "#586069"
+
+  local focus_icon = ""
+  local focus_color = "#6cb6ff"
+
+  ----------------------------------------------------------------------
+
+  -- Function to update the tags
+  local update_tags = function(self, c3)
+    local tagicon = self:get_children_by_id("icon_role")[1]
+    if c3.selected then
+      tagicon.text = focus_icon
+      self.fg = focus_color
+    elseif #c3:clients() == 0 then
+      tagicon.text = empty_icon
+      self.fg = empty_color
+    else
+      tagicon.text = unfocus_icon
+      self.fg = unfocus_color
+    end
+  end
+
+  ----------------------------------------------------------------------
+
+  local icon_taglist = awful.widget.taglist({
+    screen = s,
+    filter = awful.widget.taglist.filter.all,
+    layout = { spacing = 0, layout = wibox.layout.fixed.horizontal },
     widget_template = {
       {
-        {
-          {
-            {
-              id = "icon_role",
-              widget = wibox.widget.imagebox,
-            },
-            widget = wibox.container.margin,
-          },
-          {
-            id = "text_role",
-            widget = wibox.widget.textbox,
-          },
-          layout = wibox.layout.fixed.horizontal,
-        },
-        left = 7,
-        right = 7,
+        { id = "icon_role", font = "JetBrainsMono Nerd Font 10", widget = wibox.widget.textbox },
+        id = "margin_role",
+        top = dpi(0),
+        bottom = dpi(0),
+        left = dpi(2),
+        right = dpi(2),
         widget = wibox.container.margin,
       },
       id = "background_role",
       widget = wibox.container.background,
-      -- Add support for hover colors and an index label
-      create_callback = function(self, _, _, _)
-        self:connect_signal("mouse::enter", function()
-          if self.bg ~= c.base04 then
-            self.backup = self.bg
-            self.has_backup = true
-          end
-          self.bg = c.base04
-        end)
-        self:connect_signal("mouse::leave", function()
-          if self.has_backup then
-            self.bg = self.backup
-          end
-        end)
+      create_callback = function(self, c3, _, _)
+        update_tags(self, c3)
+      end,
+
+      update_callback = function(self, c3, _, _)
+        update_tags(self, c3)
       end,
     },
+    buttons = taglist_buttons,
   })
+  return icon_taglist
 end
 
 return m
