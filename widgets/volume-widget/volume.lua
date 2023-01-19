@@ -14,6 +14,7 @@ local gears = require("gears")
 local beautiful = require("beautiful")
 local watch = require("awful.widget.watch")
 local utils = require("widgets.volume-widget.utils")
+local gutils = require("utils")
 
 local LIST_DEVICES_CMD = [[sh -c "pacmd list-sinks; pacmd list-sources"]]
 local function GET_VOLUME_CMD(device)
@@ -102,7 +103,7 @@ local function build_rows(args, devices, on_checkbox_click, device_type)
           spacing = 8,
           layout = wibox.layout.align.horizontal,
         },
-        margins = 8,
+        margins = 4,
         layout = wibox.container.margin,
       },
       bg = beautiful.bg_normal,

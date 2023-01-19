@@ -19,9 +19,8 @@ local pairs = pairs
 local setmetatable = setmetatable
 local naughty = require("naughty")
 local table = table
+local clock = os.clock
 local tostring = tostring
-local theme = require("theme")
-local colors = require("colors")
 local capi = {
   awesome = awesome,
   tag = tag,
@@ -32,9 +31,12 @@ local capi = {
   screen = screen,
 }
 
+-- disable for now.
+-- It seems there is not way to pass err handling function into the delayed_call()
+
 local function debuginfo(message)
   message = message or "No information available"
-  naughty.notify({ text = tostring(message), timeout = 10 })
+  nid = naughty.notify({ text = tostring(message), timeout = 10 })
 end
 
 local delayed_call = (type(timer) ~= "table" and require("gears.timer").delayed_call)
@@ -72,8 +74,16 @@ local clients = {} --Table of clients to be exposed after fitlering
 local clientData = {} -- table that holds the positions and sizes of floating clients
 
 local revelation = {
-  tag_name = "r",
+  -- Name of expose tag.
+  tag_name = "Revelation",
+
   charorder = "jkluiopyhnmfdsatgvcewqzx1234567890",
+
+  -- Match function can be defined by user.
+  -- Must accept a `rule` and `client` and return `boolean`.
+  -- The rule forms follow `awful.rules` syntax except we also check the
+  -- special `rule.any` key. If its true, then we use the `match.any` function
+  -- for comparison.
   match = {
     exact = aw_rules.match,
     any = aw_rules.match_any,
@@ -92,11 +102,11 @@ local revelation = {
   tags_status = {},
   is_excluded = false,
   curr_tag_only = false,
-  font = theme.font or "monospace 20",
-  fg = colors.base06,
-  bg = colors.base01,
-  border_color = theme.border_focus,
-  border_width = theme.border_width or beautiful.border_width or 2,
+  font = beautiful.font or "monospace 20",
+  fg = beautiful.revelation_fg_normal or beautiful.fg_normal or "#DCDCCC",
+  bg = beautiful.revelation_bg_normal or beautiful.bg_normal or "#000000",
+  border_color = beautiful.revelation_border_color or beautiful.border_focus or "#DCDCCC",
+  border_width = beautiful.revelation_border_width or beautiful.border_width or 2,
   hintsize = (type(beautiful.xresources) == "table" and beautiful.xresources.apply_dpi(
     beautiful.revelation_hintsize or 50
   ) or 60),
@@ -210,9 +220,9 @@ function revelation.expose(args)
 end
 
 function revelation.restore(t, zt)
-  for scr in capi.screen do
+  for scr = 1, capi.screen.count() do
     awful.tag.history.restore(scr)
-    scr = nil
+    t[scr].screen = nil
   end
 
   capi.keygrabber.stop()
@@ -239,7 +249,7 @@ function revelation.restore(t, zt)
     zt[scr].activated = false
   end
 
-  for i, _ in pairs(hintindex) do
+  for i, j in pairs(hintindex) do
     hintbox[i].visible = false
   end
 end
@@ -288,7 +298,7 @@ function revelation.expose_callback(t, zt, clientlist)
     end
 
     if awful.util.table.hasitem(mod, "Shift") then
-      local key_char = string.lower(key)
+      key_char = string.lower(key)
       c = hintindex[key_char]
       if not zoomed and c ~= nil then
         --debuginfo(c.screen)
@@ -344,7 +354,7 @@ function revelation.expose_callback(t, zt, clientlist)
         zoomedClient = nil
         zoomed = false
       else
-        for i, _ in pairs(hintindex) do
+        for i, j in pairs(hintindex) do
           hintbox[i].visible = false
         end
         revelation.restore(t, zt)
@@ -385,7 +395,7 @@ function revelation.expose_callback(t, zt, clientlist)
       if c ~= nil then
         selectfn(restore, t, zt)(c)
 
-        for i, _ in pairs(hintindex) do
+        for i, j in pairs(hintindex) do
           hintbox[i].visible = false
         end
         return false

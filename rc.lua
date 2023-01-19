@@ -15,7 +15,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local revelation = require("revelation")
-local colors = require("colors")
+local theme = require("theme")
 
 -- Enable hotkeys help widget for VIM and other apps
 -- when client with a matching name is opened:
@@ -49,8 +49,10 @@ do
     in_error = false
   end)
 end
+
 -- Widgets
 local battery = require("widgets.battery-widget.battery")
+local docker = require("widgets.docker-widget.docker")
 local volume = require("widgets.volume-widget.volume")
 local logout_menu = require("widgets.logout-menu-widget.logout-menu")
 
@@ -64,22 +66,17 @@ if not beautiful.init(theme_path) then
   error("Unable to load " .. theme_path)
 end
 revelation.init()
-local theme = require("theme")
-local bling = require("bling")
-bling.module.window_swallowing.start()
-
 beautiful.font = theme.font
+
 awful.layout.layouts = {
   awful.layout.suit.tile,
-  bling.layout.mstab,
-  bling.layout.centered,
   awful.layout.suit.max,
   awful.layout.suit.floating,
   awful.layout.suit.tile.bottom,
 }
 
 -- Menubar configuration
-menubar.utils.terminal = theme.terminal -- Set the terminal for applications that require it
+menubar.utils.terminal = "wezterm" -- Set the terminal for applications that require it
 
 --  Wibar
 -- Create a textclock widget
@@ -100,7 +97,7 @@ end
 screen.connect_signal("property::geometry", set_wallpaper)
 
 local separator = wibox.widget({
-  font = theme.font,
+  font = font,
   text = "|",
   opacity = 0.3,
   forced_width = 20,
@@ -145,15 +142,17 @@ awful.screen.connect_for_each_screen(function(screen)
     },
     {
       layout = wibox.layout.flex.horizontal,
-      { layout = wibox.layout.fixed.horizontal, spacing = 5, screen.mytasklist }, -- Middle widget
+      screen.mytasklist, -- Middle widget
     },
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
       volume({
         font = theme.font,
-        unselected = colors.base03,
-        selected = colors.base08,
+        unselected = "#586069",
+        selected = "#ff7b72",
       }),
+      separator,
+      docker({}),
       separator,
       battery({
         font = theme.font,
@@ -212,8 +211,8 @@ awful.rules.rules = { -- All clients will match this rule.
   {
     rule = {},
     properties = {
-      border_width = theme.border_width,
-      border_color = theme.border_normal,
+      border_width = beautiful.border_width,
+      border_color = beautiful.border_normal,
       focus = awful.client.focus.filter,
       raise = true,
       keys = keybinds.clientkeys,
@@ -222,20 +221,6 @@ awful.rules.rules = { -- All clients will match this rule.
       placement = awful.placement.no_overlap + awful.placement.no_offscreen,
     },
   }, -- Floating clients.
-  {
-    rule_any = {
-      name = {
-        "GlobalProtect",
-      },
-      class = {
-        "PanGPUI",
-      },
-    },
-    properties = {
-      floating = true,
-      placement = awful.placement.top_right,
-    },
-  },
   {
     rule_any = {
       instance = {
