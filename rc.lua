@@ -115,11 +115,9 @@ awful.screen.connect_for_each_screen(function(screen)
   -- Create an imagebox widget which will contain an icon indicating which layout we're using.
   -- We need one layoutbox per screen.
   screen.mylayoutbox = awful.widget.layoutbox(screen)
-  screen.mylayoutbox:buttons(gears.table.join(
-    awful.button({}, 1, function()
-      awful.layout.inc(1)
-    end)
-  ))
+  screen.mylayoutbox:buttons(gears.table.join(awful.button({}, 1, function()
+    awful.layout.inc(1)
+  end)))
 
   screen.mytaglist = require("taglist").create(screen)
   screen.mytasklist = require("tasklist").create(screen)
@@ -135,7 +133,7 @@ awful.screen.connect_for_each_screen(function(screen)
     expand = "none",
     { -- Left widgets
       layout = wibox.layout.fixed.horizontal,
-      spacing = 20,
+      spacing = 5,
       { layout = wibox.layout.fixed.horizontal },
       { layout = wibox.layout.fixed.horizontal, spacing = 5, screen.mylayoutbox, screen.mytaglist },
       screen.mypromptbox,
@@ -164,6 +162,15 @@ awful.screen.connect_for_each_screen(function(screen)
       wibox.widget.systray(),
       separator,
       logout_menu(),
+      wibox.widget({
+        font = font,
+        text = "",
+        opacity = 0.3,
+        forced_width = 5,
+        valign = "center",
+        align = "center",
+        widget = wibox.widget.textbox,
+      }),
     },
   })
 end)
