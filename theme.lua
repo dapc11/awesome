@@ -11,7 +11,8 @@ local font_size = 11
 m.modkey = "Mod4"
 m.terminal = "wezterm"
 
-m.font = "SF Pro Display " .. font_size
+m.font_name = "SF Pro Display"
+m.font = m.font_name .. " " .. font_size
 m.wallpaper = os.getenv("HOME") .. "/.local/background.jpg"
 -- Background
 m.bg_normal = "#2d333b"

@@ -69,17 +69,18 @@ cyclefocus = {
     -- Default callback, which will gets applied for all offsets (first).
     default = function(preset, args)
       -- Default font and icon size (gets overwritten for current/0 index).
-      preset.font = theme.font
+      preset.font = theme.font_name .. " 11"
       preset.icon_size = dpi(24)
       preset.text = escape_markup(cyclefocus.get_client_title(args.client, false))
+      preset.opacity = 0.7
     end,
 
     -- Preset for current entry.
     ["0"] = function(preset, args)
-      preset.font = theme.font
-      preset.icon_size = dpi(36)
+      preset.font = theme.font_name .. " Bold 11"
+      preset.icon_size = dpi(24)
+      preset.opacity = 1
       preset.text = escape_markup(cyclefocus.get_client_title(args.client, true))
-      preset.text = preset.text
     end,
   },
 
@@ -1092,6 +1093,7 @@ cyclefocus.cycle = function(startdirection_or_args, args)
       local textbox = wibox.widget.textbox()
       textbox:set_markup(preset.text)
       textbox:set_font(preset.font)
+      textbox:set_opacity(preset.opacity)
       textbox:set_wrap("word_char")
       textbox:set_ellipsize("middle")
       -- Set height to no wrap with fixed main layout.
@@ -1105,7 +1107,7 @@ cyclefocus.cycle = function(startdirection_or_args, args)
       local entry_with_bg = wibox.container.background(entry_layout)
       if offset == 0 then
         entry_with_bg:set_fg(beautiful.fg_normal)
-        entry_with_bg:set_bg(beautiful.bg_focus)
+        entry_with_bg:set_bg("#586069")
       else
         entry_with_bg:set_fg(beautiful.fg_normal)
         -- entry_with_bg:set_bg(beautiful.bg_normal.."dd")
