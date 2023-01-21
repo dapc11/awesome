@@ -133,9 +133,16 @@ awful.screen.connect_for_each_screen(function(screen)
     expand = "none",
     { -- Left widgets
       layout = wibox.layout.fixed.horizontal,
-      spacing = 5,
-      { layout = wibox.layout.fixed.horizontal },
-      { layout = wibox.layout.fixed.horizontal, spacing = 5, screen.mylayoutbox, screen.mytaglist },
+      wibox.widget({
+        font = font,
+        text = "",
+        opacity = 0.3,
+        forced_width = 5,
+        valign = "center",
+        align = "center",
+        widget = wibox.widget.textbox,
+      }),
+      screen.mytaglist,
       screen.mypromptbox,
     },
     {
@@ -144,6 +151,8 @@ awful.screen.connect_for_each_screen(function(screen)
     },
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
+      screen.mylayoutbox,
+      separator,
       volume({
         font = theme.font,
         unselected = "#586069",
