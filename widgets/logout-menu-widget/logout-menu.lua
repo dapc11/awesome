@@ -3,6 +3,7 @@ local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
 local utils = require("utils")
+local colors = require("colors")
 
 local HOME = os.getenv("HOME")
 local ICON_DIR = HOME .. "/.config/awesome/widgets/logout-menu-widget/icons/"
@@ -91,7 +92,7 @@ local function worker(user_args)
     })
 
     row:connect_signal("mouse::enter", function(c)
-      c:set_bg(beautiful.bg_focus)
+      c:set_bg(colors.base02)
     end)
     row:connect_signal("mouse::leave", function(c)
       c:set_bg(beautiful.bg_normal)
@@ -130,7 +131,7 @@ local function worker(user_args)
       logout_menu_widget:set_bg("#00000000")
     else
       popup:move_next_to(mouse.current_widget_geometry)
-      logout_menu_widget:set_bg(beautiful.bg_focus)
+      logout_menu_widget:set_bg(colors.base02)
     end
   end)))
 

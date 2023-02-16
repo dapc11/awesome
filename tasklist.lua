@@ -9,7 +9,7 @@ function m.create(screen)
       fg_normal = "#586069",
       bg_normal = "#2d333b",
       fg_focus = "#c9d1d9",
-      bg_focus = "#2d333b",
+      bg_focus = nil,
       fg_urgent = "#484f58",
       bg_urgent = "#ff7b72",
       fg_minimize = "#2d333b",

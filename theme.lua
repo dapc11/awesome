@@ -19,7 +19,7 @@ theme.useless_gap = dpi(7)
 theme.wallpaper = os.getenv("HOME") .. "/.local/background.jpg"
 
 theme.bg_dark = c.base00
-theme.bg_focus = c.base02
+theme.bg_focus = c.none
 theme.bg_minimize = c.base03
 theme.bg_normal = c.base01
 theme.bg_systray = c.base01

@@ -186,9 +186,6 @@ keybinds.globalkeys = gears.table.join(
   awful.key({ theme.modkey }, "r", function()
     awful.screen.focused().mypromptbox:run()
   end),
-<<<<<<< HEAD
-  awful.key({ theme.modkey }, "i", hotkeys_popup.show_help, { description = "show help", group = "awesome" })
-=======
   awful.key({ theme.modkey }, "i", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
   awful.key({}, "Print", function()
     spawn.easy_async([[sh -c 'pacmd list-cards | grep index | tail -1 | xargs | cut -d" " -f 2']], function(stdout)
@@ -241,7 +238,6 @@ keybinds.globalkeys = gears.table.join(
   awful.key({ "Ctrl" }, "l", function()
     awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
   end)
->>>>>>> Fixes
 )
 
 keybinds.clientkeys = gears.table.join(
