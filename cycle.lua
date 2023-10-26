@@ -7,6 +7,7 @@ local awful = require("awful")
 -- local setmetatable = setmetatable
 local naughty = require("naughty")
 local theme = require("theme")
+local colors = require("colors")
 local table = table
 local tostring = tostring
 local floor = require("math").floor
@@ -1024,8 +1025,8 @@ cyclefocus.cycle = function(startdirection_or_args, args)
     if not wbox then
       wbox = wibox({ ontop = true })
       wbox._for_screen = mouse.screen
-      wbox:set_fg(beautiful.fg_normal)
-      wbox:set_bg("#ffffff00")
+      wbox:set_fg(colors.base07)
+      wbox:set_bg(colors.transparent)
 
       local container_inner = wibox.layout.align.vertical()
       local container_layout = wibox.container.margin(
@@ -1036,7 +1037,7 @@ cyclefocus.cycle = function(startdirection_or_args, args)
         container_margin_top_bottom
       )
       container_layout = wibox.container.background(container_layout)
-      container_layout:set_bg(beautiful.bg_normal .. "cc")
+      container_layout:set_bg(colors.base01 .. "cc")
 
       wbox:set_widget(container_layout)
       -- "fixed" appears to work better for when there are no icons to
@@ -1106,11 +1107,11 @@ cyclefocus.cycle = function(startdirection_or_args, args)
       entry_layout = wibox.container.margin(entry_layout, dpi(5), dpi(5), dpi(2), dpi(2))
       local entry_with_bg = wibox.container.background(entry_layout)
       if offset == 0 then
-        entry_with_bg:set_fg(beautiful.fg_normal)
-        entry_with_bg:set_bg("#586069")
+        entry_with_bg:set_fg(colors.base07)
+        entry_with_bg:set_bg(colors.base03)
       else
-        entry_with_bg:set_fg(beautiful.fg_normal)
-        -- entry_with_bg:set_bg(beautiful.bg_normal.."dd")
+        entry_with_bg:set_fg(colors.base07)
+        -- entry_with_bg:set_bg(colors.base01.."dd")
       end
       layout:add(entry_with_bg)
 
@@ -1161,7 +1162,7 @@ cyclefocus.cycle = function(startdirection_or_args, args)
     wbox:geometry({
       height = h,
       y = wa.y + floor(wa.height / 2 - h / 2),
-      x = floor(wa.width / 3 - w ),
+      x = floor(wa.width / 3 - w),
     })
     wbox.visible = true
     return true

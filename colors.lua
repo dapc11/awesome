@@ -16,4 +16,5 @@ M.base0D = "#6cb6ff"
 M.base0E = "#b083f0"
 M.base0F = "#f69d50"
 M.none = ""
+M.transparent = "#00000000"
 return M

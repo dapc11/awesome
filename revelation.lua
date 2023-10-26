@@ -15,11 +15,11 @@ local beautiful = require("beautiful")
 local wibox = require("wibox")
 local awful = require("awful")
 local aw_rules = require("awful.rules")
+local colors = require("colors")
 local pairs = pairs
 local setmetatable = setmetatable
 local naughty = require("naughty")
 local table = table
-local clock = os.clock
 local tostring = tostring
 local capi = {
   awesome = awesome,
@@ -36,7 +36,7 @@ local capi = {
 
 local function debuginfo(message)
   message = message or "No information available"
-  nid = naughty.notify({ text = tostring(message), timeout = 10 })
+  naughty.notify({ text = tostring(message), timeout = 10 })
 end
 
 local delayed_call = (type(timer) ~= "table" and require("gears.timer").delayed_call)
@@ -77,7 +77,7 @@ local revelation = {
   -- Name of expose tag.
   tag_name = "Revelation",
 
-  charorder = "jkluiopyhnmfdsatgvcewqzx1234567890",
+  charorder = "jkluiopyhnmfdsatgvcewqzx123456789",
 
   -- Match function can be defined by user.
   -- Must accept a `rule` and `client` and return `boolean`.
@@ -103,10 +103,10 @@ local revelation = {
   is_excluded = false,
   curr_tag_only = false,
   font = beautiful.font or "monospace 20",
-  fg = beautiful.revelation_fg_normal or beautiful.fg_normal or "#DCDCCC",
-  bg = beautiful.revelation_bg_normal or beautiful.bg_normal or "#000000",
-  border_color = beautiful.revelation_border_color or beautiful.border_focus or "#DCDCCC",
-  border_width = beautiful.revelation_border_width or beautiful.border_width or 2,
+  fg = colors.base07,
+  bg = colors.base01,
+  border_color = colors.base01,
+  border_width = 0,
   hintsize = (type(beautiful.xresources) == "table" and beautiful.xresources.apply_dpi(
     beautiful.revelation_hintsize or 50
   ) or 60),
@@ -221,10 +221,8 @@ end
 
 function revelation.restore(t, zt)
   for scr = 1, capi.screen.count() do
-    awful.tag.history.restore(scr)
-    t[scr].screen = nil
+    t[scr]:delete()
   end
-
   capi.keygrabber.stop()
   capi.mousegrabber.stop()
 
@@ -249,7 +247,7 @@ function revelation.restore(t, zt)
     zt[scr].activated = false
   end
 
-  for i, j in pairs(hintindex) do
+  for i, _ in pairs(hintindex) do
     hintbox[i].visible = false
   end
 end
@@ -298,7 +296,7 @@ function revelation.expose_callback(t, zt, clientlist)
     end
 
     if awful.util.table.hasitem(mod, "Shift") then
-      key_char = string.lower(key)
+      local key_char = string.lower(key)
       c = hintindex[key_char]
       if not zoomed and c ~= nil then
         --debuginfo(c.screen)
@@ -334,7 +332,7 @@ function revelation.expose_callback(t, zt, clientlist)
 
       selectfn(restore, t, zt)(hintindex[key])
 
-      for i, j in pairs(hintindex) do
+      for i, _ in pairs(hintindex) do
         hintbox[i].visible = false
       end
 
@@ -354,7 +352,7 @@ function revelation.expose_callback(t, zt, clientlist)
         zoomedClient = nil
         zoomed = false
       else
-        for i, j in pairs(hintindex) do
+        for i, _ in pairs(hintindex) do
           hintbox[i].visible = false
         end
         revelation.restore(t, zt)
@@ -395,7 +393,7 @@ function revelation.expose_callback(t, zt, clientlist)
       if c ~= nil then
         selectfn(restore, t, zt)(c)
 
-        for i, j in pairs(hintindex) do
+        for i, _ in pairs(hintindex) do
           hintbox[i].visible = false
         end
         return false

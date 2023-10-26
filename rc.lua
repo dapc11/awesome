@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-global
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
@@ -67,10 +66,28 @@ revelation.init()
 local theme = require("theme")
 local bling = require("bling")
 
+bling.widget.window_switcher.enable({
+  type = "thumbnail", -- set to anything other than "thumbnail" to disable client previews
+
+  -- keybindings (the examples provided are also the default if kept unset)
+  hide_window_switcher_key = "Escape", -- The key on which to close the popup
+  minimize_key = "n", -- The key on which to minimize the selected client
+  unminimize_key = "N", -- The key on which to unminimize all clients
+  kill_client_key = "q", -- The key on which to close the selected client
+  cycle_key = "Tab", -- The key on which to cycle through all clients
+  previous_key = "Left", -- The key on which to select the previous client
+  next_key = "Right", -- The key on which to select the next client
+  vim_previous_key = "h", -- Alternative key on which to select the previous client
+  vim_next_key = "l", -- Alternative key on which to select the next client
+
+  cycleClientsByIdx = awful.client.focus.byidx, -- The function to cycle the clients
+  filterClients = awful.widget.taglist.filter.all, -- The function to filter the viewed clients
+})
 beautiful.font = theme.font
 awful.layout.layouts = {
   awful.layout.suit.tile,
   bling.layout.mstab,
+  bling.layout.equalarea,
   bling.layout.centered,
   awful.layout.suit.max,
   awful.layout.suit.floating,
@@ -117,11 +134,9 @@ awful.screen.connect_for_each_screen(function(screen)
   -- Create an imagebox widget which will contain an icon indicating which layout we're using.
   -- We need one layoutbox per screen.
   screen.mylayoutbox = awful.widget.layoutbox(screen)
-  screen.mylayoutbox:buttons(gears.table.join(
-    awful.button({}, 1, function()
-      awful.layout.inc(1)
-    end)
-  ))
+  screen.mylayoutbox:buttons(gears.table.join(awful.button({}, 1, function()
+    awful.layout.inc(1)
+  end)))
 
   screen.mytaglist = require("taglist").create(screen)
   screen.mytasklist = require("tasklist").create(screen)
@@ -139,10 +154,11 @@ awful.screen.connect_for_each_screen(function(screen)
       layout = wibox.layout.fixed.horizontal,
       spacing = 20,
       { layout = wibox.layout.fixed.horizontal },
-      { layout = wibox.layout.fixed.horizontal, spacing = 5, screen.mylayoutbox, screen.mytaglist },
+      { layout = wibox.layout.fixed.horizontal, spacing = 5, screen.mytaglist, screen.mylayoutbox },
       screen.mypromptbox,
     },
     {
+      mytextclock,
       layout = wibox.layout.flex.horizontal,
     },
     { -- Right widgets
@@ -158,10 +174,7 @@ awful.screen.connect_for_each_screen(function(screen)
         show_current_level = true,
       }),
       separator,
-      mytextclock,
-      separator,
       wibox.widget.systray(),
-      separator,
       logout_menu(),
     },
   })
@@ -169,40 +182,15 @@ end)
 
 root.buttons(gears.table.join(awful.button({}, 4, awful.tag.viewnext), awful.button({}, 5, awful.tag.viewprev)))
 
-local clientbuttons = gears.table.join(
-  awful.button({}, 1, function(c)
-    c:emit_signal("request::activate", "mouse_click", {
-      raise = true,
-    })
-  end),
-  awful.button({ theme.modkey }, 1, function(c)
-    c:emit_signal("request::activate", "mouse_click", {
-      raise = true,
-    })
-    awful.mouse.client.move(c)
-  end),
-  awful.button({ theme.modkey }, 3, function(c)
-    c:emit_signal("request::activate", "mouse_click", {
-      raise = true,
-    })
-    awful.mouse.client.resize(c)
-  end)
-)
+local clientbuttons = gears.table.join(awful.button({ theme.modkey }, 3, function(c)
+  c:emit_signal("request::activate", "mouse_click", {
+    raise = true,
+  })
+  awful.mouse.client.resize(c)
+end))
 
 local keybinds = require("keybinds")
 root.keys(keybinds.globalkeys)
-
-local function rule(class, screen, tag)
-  return {
-    rule = {
-      class = class,
-    },
-    properties = {
-      screen = screen,
-      tag = tag,
-    },
-  }
-end
 
 --  Rules
 -- Rules to apply to new clients (through the "manage" signal).
@@ -278,17 +266,6 @@ awful.rules.rules = { -- All clients will match this rule.
       titlebars_enabled = theme.titlebars_enabled,
     },
   },
-  rule("Evolution", 1, "1"),
-  rule("Jetbrains-idea-ce", 1, "3"),
-  rule("Jetbrains-pycharm-ce", 1, "3"),
-  rule("wfica", 1, "6"),
-  rule("Libreoffice-writer", 1, "7"),
-  rule("Thunar", 1, 1),
-  rule("PulseUi", 1, "8"),
-  rule("Pidgin", 1, "9"),
-  rule("Telegram", 1, "9"),
-  rule("Teams-for-linux", 1, "9"),
-  rule("Microsoft Teams Notification", 1, "9"),
 }
 
 --  Signals
@@ -325,20 +302,7 @@ end)
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
   -- buttons for the titlebar
-  local buttons = gears.table.join(
-    awful.button({}, 1, function()
-      c:emit_signal("request::activate", "titlebar", {
-        raise = true,
-      })
-      awful.mouse.client.move(c)
-    end),
-    awful.button({}, 3, function()
-      c:emit_signal("request::activate", "titlebar", {
-        raise = true,
-      })
-      awful.mouse.client.resize(c)
-    end)
-  )
+  local buttons = gears.table.join()
 
   awful.titlebar(c):setup({
     { -- Left
@@ -385,3 +349,4 @@ end)
 awful.spawn.with_shell("dunst")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("picom")
+awful.spawn.with_shell("gnome-screensaver")

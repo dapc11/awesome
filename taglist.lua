@@ -1,6 +1,7 @@
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
+local c = require("colors")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
 local m = {}
@@ -12,11 +13,6 @@ m.create = function(s)
   local taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
       t:view_only()
-    end),
-    awful.button({ modkey }, 1, function(t)
-      if client.focus then
-        client.focus:move_to_tag(t)
-      end
     end),
     awful.button({}, 3, awful.tag.viewtoggle),
     awful.button({ modkey }, 3, function(t)
@@ -35,13 +31,13 @@ m.create = function(s)
   ----------------------------------------------------------------------
 
   local unfocus_icon = ""
-  local unfocus_color = "#8b949e"
+  local unfocus_color = c.base05
 
   local empty_icon = ""
-  local empty_color = "#586069"
+  local empty_color = c.base03
 
   local focus_icon = ""
-  local focus_color = "#6cb6ff"
+  local focus_color = c.base0D
 
   ----------------------------------------------------------------------
 

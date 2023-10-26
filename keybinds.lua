@@ -1,5 +1,4 @@
 local gears = require("gears")
-local naughty = require("naughty")
 local spawn = require("awful.spawn")
 local awful = require("awful")
 local theme = require("theme")
@@ -7,17 +6,17 @@ local xrandr = require("xrandr")
 local revelation = require("revelation")
 local hotkeys_popup = require("awful.hotkeys_popup")
 local bling = require("bling")
-local colors = require("colors")
+local cyclefocus = require("cycle")
 
 local term_scratch = bling.module.scratchpad({
-  command = "alacritty --class spad", -- How to spawn the scratchpad
+  command = "wezterm start --class spad", -- How to spawn the scratchpad
   rule = { instance = "spad" }, -- The rule that the scratchpad will be searched by
   sticky = true, -- Whether the scratchpad should be sticky
   autoclose = false, -- Whether it should hide itself when losing focus
   floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
   geometry = { x = 0, y = 0, height = 900, width = 1200 }, -- The geometry in a floating state
   reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
-  dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
+  dont_focus_before_close = true, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
 })
 local spotify_scratch = bling.module.scratchpad({
   command = "spotfy", -- How to spawn the scratchpad
@@ -27,7 +26,7 @@ local spotify_scratch = bling.module.scratchpad({
   floating = true, -- Whether it should be floating (MUST BE TRUE FOR ANIMATIONS)
   geometry = { x = 360, y = 90, height = 900, width = 1200 }, -- The geometry in a floating state
   reapply = true, -- Whether all those properties should be reapplied on every new opening of the scratchpad (MUST BE TRUE FOR ANIMATIONS)
-  dont_focus_before_close = false, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
+  dont_focus_before_close = true, -- When set to true, the scratchpad will be closed by the toggle function regardless of whether its focused or not. When set to false, the toggle function will first bring the scratchpad into focus and only close it on a second call
 })
 
 local keybinds = {}
@@ -109,36 +108,39 @@ keybinds.globalkeys = gears.table.join(
     description = "reload awesome",
     group = "awesome",
   }),
+  -- awful.key({ theme.modkey }, "s", function()
+  --   awful.menu.client_list({ theme = { width = 500, border_width = 10 } })
+  -- end, { description = "show client list", group = "awesome" }),
   awful.key({ theme.modkey }, "d", function()
-    awful.spawn("rofi -normal-window -show drun -display-drun '' -modi drun -theme ~/.config/rofi/config")
+    awful.spawn("rofi -modes drun -show drun")
   end, {
     description = "launch application",
     group = "launcher",
   }),
-  awful.key({ theme.modkey }, "l", function()
+  awful.key({ "Mod1" }, "l", function()
     awful.tag.incmwfact(0.05)
   end, {
     description = "increase master width factor",
     group = "layout",
   }),
-  awful.key({ theme.modkey }, "h", function()
+  awful.key({ "Mod1" }, "h", function()
     awful.tag.incmwfact(-0.05)
   end, {
     description = "decrease master width factor",
     group = "layout",
   }),
-  awful.key({ theme.modkey, "Shift" }, "h", function()
-    awful.tag.incnmaster(1, nil, true)
-  end, {
-    description = "increase the number of master clients",
-    group = "layout",
-  }),
-  awful.key({ theme.modkey, "Shift" }, "l", function()
-    awful.tag.incnmaster(-1, nil, true)
-  end, {
-    description = "decrease the number of master clients",
-    group = "layout",
-  }),
+  -- awful.key({ "Control", "Shift" }, "h", function()
+  --   awful.tag.incnmaster(1, nil, true)
+  -- end, {
+  --   description = "increase the number of master clients",
+  --   group = "layout",
+  -- }),
+  -- awful.key({ "Control", "Shift" }, "l", function()
+  --   awful.tag.incnmaster(-1, nil, true)
+  -- end, {
+  --   description = "decrease the number of master clients",
+  --   group = "layout",
+  -- }),
   awful.key({ theme.modkey, "Control" }, "h", function()
     awful.tag.incncol(1, nil, true)
   end, {
@@ -235,9 +237,12 @@ keybinds.globalkeys = gears.table.join(
   awful.key({}, "XF86AudioRaiseVolume", function()
     spawn.easy_async([[sh -c 'amixer -q -D pulse sset Master 3%+ unmute']], function() end)
   end, { description = "increase volume", group = "sound" }),
-  awful.key({ "Ctrl" }, "l", function()
-    awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
-  end)
+  awful.key({ theme.modkey }, "l", function()
+    spawn.easy_async(
+      [[sh -c 'dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock']]
+    )
+  end),
+  awful.key({ theme.modkey }, "s", revelation)
 )
 
 keybinds.clientkeys = gears.table.join(
@@ -290,8 +295,7 @@ keybinds.clientkeys = gears.table.join(
   awful.key({ theme.modkey, "Shift" }, "Tab", function(_)
     cyclefocus.cycle({ modifier = "Super_L" })
   end),
-  awful.key({ theme.modkey }, "Escape", awful.tag.history.restore),
-  awful.key({ theme.modkey }, "e", revelation)
+  awful.key({ theme.modkey }, "Escape", awful.tag.history.restore)
 )
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it work on any keyboard layout.

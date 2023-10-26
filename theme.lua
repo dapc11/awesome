@@ -1,3 +1,4 @@
+local beautiful = require("beautiful")
 local xresources = require("beautiful.xresources")
 local gears = require("gears")
 local c = require("colors")
@@ -13,7 +14,7 @@ theme.modkey = "Mod4"
 theme.notification_max_width = dpi(500)
 theme.notification_shape = gears.shape.rounded_rect
 theme.systray_icon_spacing = dpi(5)
-theme.terminal = "alacritty"
+theme.terminal = "wezterm"
 theme.titlebars_enabled = false
 theme.useless_gap = dpi(7)
 theme.wallpaper = os.getenv("HOME") .. "/.local/background.jpg"
@@ -34,6 +35,9 @@ theme.fg_focus = c.none
 theme.fg_minimize = c.base05
 theme.fg_normal = c.base06
 theme.fg_urgent = c.base00
+beautiful.menu_fg_focus = c.base06
+beautiful.menu_bg_focus = c.base03
+beautiful.menu_border_color = c.base01
 
 theme.notification_bg = c.base01
 theme.notification_font = theme.font
@@ -66,8 +70,26 @@ theme.titlebar_sticky_button_focus_inactive = themes_path .. "titlebar/sticky_fo
 theme.titlebar_sticky_button_normal_active = themes_path .. "titlebar/sticky_normal_active.png"
 theme.titlebar_sticky_button_normal_inactive = themes_path .. "titlebar/sticky_normal_inactive.png"
 
-theme.parent_filter_list = { "google-chrome", "Google-chrome", "firefox", "Gimp", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution", "Firefox" } -- class names list of parents that should not be swallowed
-theme.child_filter_list = { "Dragon", "microsoft teams - preview", "Microsoft Teams - Preview", "Evolution", "Google-chrome", "google-chrome", "firefox", "Firefox" } -- class names list that should not swallow their parents
+theme.parent_filter_list = {
+  "google-chrome",
+  "Google-chrome",
+  "firefox",
+  "Gimp",
+  "microsoft teams - preview",
+  "Microsoft Teams - Preview",
+  "Evolution",
+  "Firefox",
+} -- class names list of parents that should not be swallowed
+theme.child_filter_list = {
+  "Dragon",
+  "microsoft teams - preview",
+  "Microsoft Teams - Preview",
+  "Evolution",
+  "Google-chrome",
+  "google-chrome",
+  "firefox",
+  "Firefox",
+} -- class names list that should not swallow their parents
 theme.swallowing_filter = true -- whether the filters above should be active
 
 return theme

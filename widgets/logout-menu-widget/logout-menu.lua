@@ -2,7 +2,6 @@ local awful = require("awful")
 local wibox = require("wibox")
 local gears = require("gears")
 local beautiful = require("beautiful")
-local utils = require("utils")
 local colors = require("colors")
 
 local HOME = os.getenv("HOME")
@@ -45,9 +44,10 @@ local function worker(user_args)
   local onlogout = args.onlogout or function()
     awesome.quit()
   end
-  local onlock = args.onlock or function()
-    awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
-  end
+  local onlock = args.onlock
+    or function()
+      awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
+    end
   local onreboot = args.onreboot or function()
     awful.spawn.with_shell("reboot")
   end
