@@ -7,6 +7,8 @@ local wibox = require("wibox")
 local gfs = require("gears.filesystem")
 local gs = require("gears.shape")
 local gutils = require("utils")
+local colors = require("colors")
+local theme = require("theme.theme")
 
 -- acpi sample outputs
 -- Battery 0: Discharging, 75%, 01:51:38 remaining
@@ -71,8 +73,10 @@ local function worker(user_args)
     shape = function(cr, width, height)
       gears.shape.rounded_rect(cr, width, height)
     end,
-    maximum_width = 400,
-    offset = { y = 5 },
+    bg = colors.base00,
+    border_width = 2,
+    border_color = colors.base02,
+    offset = { x = 10 },
     widget = {},
   })
   local notification
@@ -80,7 +84,7 @@ local function worker(user_args)
     return wibox.widget({
       {
         text = text,
-        font = beautiful.font .. ", bold",
+        font = theme.font,
         align = "center",
         widget = wibox.widget.textbox,
       },
@@ -102,19 +106,11 @@ local function worker(user_args)
       local row = wibox.widget({
         {
           {
-            {
-              image = path_to_icons .. batteryType .. ".svg",
-              resize = false,
-              widget = wibox.widget.imagebox,
-            },
-            {
-              text = stdout,
-              font = beautiful.font,
-              widget = wibox.widget.textbox,
-            },
-            spacing = 12,
-            layout = wibox.layout.fixed.horizontal,
+            text = stdout,
+            font = theme.font,
+            widget = wibox.widget.textbox,
           },
+          align = "center",
           margins = 8,
           layout = wibox.container.margin,
         },

@@ -14,7 +14,8 @@ local gears = require("gears")
 local beautiful = require("beautiful")
 local watch = require("awful.widget.watch")
 local utils = require("widgets.volume-widget.utils")
-local gutils = require("utils")
+local colors = require("colors")
+local theme = require("theme.theme")
 
 local LIST_DEVICES_CMD = [[sh -c "pacmd list-sinks; pacmd list-sources"]]
 local function GET_VOLUME_CMD(device)
@@ -35,22 +36,20 @@ end
 
 local widget_types = {
   icon_and_text = require("widgets.volume-widget.widgets.icon-and-text-widget"),
-  icon = require("widgets.volume-widget.widgets.icon-widget"),
-  arc = require("widgets.volume-widget.widgets.arc-widget"),
-  horizontal_bar = require("widgets.volume-widget.widgets.horizontal-bar-widget"),
-  vertical_bar = require("widgets.volume-widget.widgets.vertical-bar-widget"),
 }
 local volume = {}
 
 local rows = { layout = wibox.layout.fixed.vertical }
 
 local popup = awful.popup({
-  bg = beautiful.bg_normal,
   ontop = true,
   visible = false,
   shape = gears.shape.rounded_rect,
+  bg = colors.base00,
+  border_width = 2,
+  border_color = colors.base02,
   maximum_width = 400,
-  offset = { y = 5 },
+  offset = { x = 10 },
   widget = {},
 })
 
@@ -88,6 +87,7 @@ local function build_rows(args, devices, on_checkbox_click, device_type)
           {
             checkbox,
             valign = "center",
+            spacing = 15,
             layout = wibox.container.place,
           },
           {
@@ -112,7 +112,7 @@ local function build_rows(args, devices, on_checkbox_click, device_type)
     })
 
     row:connect_signal("mouse::enter", function(c)
-      c:set_bg(beautiful.bg_focus)
+      c:set_bg(colors.base02)
     end)
     row:connect_signal("mouse::leave", function(c)
       c:set_bg(beautiful.bg_normal)
@@ -147,7 +147,7 @@ local function build_header_row(text)
   return wibox.widget({
     {
       text = text,
-      font = beautiful.font .. ", bold",
+      font = theme.font,
       align = "center",
       widget = wibox.widget.textbox,
     },

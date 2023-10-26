@@ -14,7 +14,7 @@ local logout_menu_widget = wibox.widget({
       resize = true,
       widget = wibox.widget.imagebox,
     },
-    margins = 4,
+    margins = 2,
     layout = wibox.container.margin,
   },
   shape = function(cr, width, height)
@@ -29,8 +29,11 @@ local popup = awful.popup({
   shape = function(cr, width, height)
     gears.shape.rounded_rect(cr, width, height)
   end,
+  bg = colors.base00,
+  border_width = 2,
+  border_color = colors.base02,
   maximum_width = 400,
-  offset = { y = 5 },
+  offset = { x = 10 },
   widget = {},
 })
 
@@ -46,7 +49,9 @@ local function worker(user_args)
   end
   local onlock = args.onlock
     or function()
-      awful.spawn.with_shell("i3lock -c " .. string.sub(colors.base01, 2))
+      awful.spawn.with_shell(
+        "sh -c 'dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock'"
+      )
     end
   local onreboot = args.onreboot or function()
     awful.spawn.with_shell("reboot")
@@ -71,23 +76,27 @@ local function worker(user_args)
       {
         {
           {
-            image = ICON_DIR .. item.icon_name,
-            resize = false,
-            widget = wibox.widget.imagebox,
+            {
+              image = ICON_DIR .. item.icon_name,
+              resize = false,
+              widget = wibox.widget.imagebox,
+            },
+            top = 3,
+            bottom = 1,
+            layout = wibox.container.margin,
           },
           {
             text = item.name,
             font = font,
             widget = wibox.widget.textbox,
           },
-          spacing = 12,
+          spacing = 4,
           layout = wibox.layout.fixed.horizontal,
         },
-        margins = 8,
+        margins = 4,
         layout = wibox.container.margin,
       },
-      bg = beautiful.bg_normal,
-      fg = beautiful.fg_normal,
+      bg = colors.base00,
       widget = wibox.container.background,
     })
 
@@ -128,7 +137,7 @@ local function worker(user_args)
   logout_menu_widget:buttons(awful.util.table.join(awful.button({}, 1, function()
     if popup.visible then
       popup.visible = not popup.visible
-      logout_menu_widget:set_bg("#00000000")
+      logout_menu_widget:set_bg(colors.transparent)
     else
       popup:move_next_to(mouse.current_widget_geometry)
       logout_menu_widget:set_bg(colors.base02)
@@ -136,7 +145,7 @@ local function worker(user_args)
   end)))
 
   logout_menu_widget:connect_signal("mouse::leave", function()
-    logout_menu_widget:set_bg("#00000000")
+    logout_menu_widget:set_bg(colors.transparent)
   end)
 
   return logout_menu_widget

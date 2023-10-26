@@ -6,7 +6,7 @@
 local awful = require("awful")
 -- local setmetatable = setmetatable
 local naughty = require("naughty")
-local theme = require("theme")
+local theme = require("theme.theme")
 local colors = require("colors")
 local table = table
 local tostring = tostring

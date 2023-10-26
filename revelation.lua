@@ -19,6 +19,7 @@ local colors = require("colors")
 local pairs = pairs
 local setmetatable = setmetatable
 local naughty = require("naughty")
+local theme = require("theme.theme")
 local table = table
 local tostring = tostring
 local capi = {
@@ -102,11 +103,11 @@ local revelation = {
   tags_status = {},
   is_excluded = false,
   curr_tag_only = false,
-  font = beautiful.font or "monospace 20",
-  fg = colors.base07,
-  bg = colors.base01,
-  border_color = colors.base01,
-  border_width = 0,
+  font = theme.font,
+  fg = colors.base06,
+  bg = colors.base00,
+  border_color = colors.base02,
+  border_width = 2,
   hintsize = (type(beautiful.xresources) == "table" and beautiful.xresources.apply_dpi(
     beautiful.revelation_hintsize or 50
   ) or 60),
