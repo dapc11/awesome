@@ -7,18 +7,16 @@ local wibox = require("wibox")
 
 local beautiful = require("beautiful")
 
-local bling = require("bling")
 local theme = require("theme.theme")
 local color = require("colors")
 
 beautiful.init(gfs.get_configuration_dir() .. "theme/theme.lua")
 
--- Bling Setting
-
 awful.screen.connect_for_each_screen(function(s)
   -- Set tags and default layout
   awful.tag({ "1", "2", "3", "4", "5" }, s, awful.layout.suit.tile)
 
+  s.mylayoutbox = awful.widget.layoutbox(s)
   local taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
       t:view_only()
@@ -84,21 +82,21 @@ awful.screen.connect_for_each_screen(function(s)
       id = "background_role",
       widget = wibox.container.background,
       -- Add support for hover colors and an index label
-      create_callback = function(self, c3, _, _) --luacheck: no unused args
-        self:connect_signal("mouse::enter", function()
-          if #c3:clients() > 0 then
-            awesome.emit_signal("bling::tag_preview::update", c3)
-            awesome.emit_signal("bling::tag_preview::visibility", s, true)
-          end
-        end)
-        self:connect_signal("mouse::leave", function()
-          awesome.emit_signal("bling::tag_preview::visibility", s, false)
-          if self.has_backup then
-            self.bg = self.backup
-          end
-        end)
-      end,
-      update_callback = function(_, _, _, _) end,
+      -- create_callback = function(self, c3, _, _) --luacheck: no unused args
+      --   self:connect_signal("mouse::enter", function()
+      --     if #c3:clients() > 0 then
+      --       awesome.emit_signal("bling::tag_preview::update", c3)
+      --       awesome.emit_signal("bling::tag_preview::visibility", s, true)
+      --     end
+      --   end)
+      --   self:connect_signal("mouse::leave", function()
+      --     awesome.emit_signal("bling::tag_preview::visibility", s, false)
+      --     if self.has_backup then
+      --       self.bg = self.backup
+      --     end
+      --   end)
+      -- end,
+      -- update_callback = function(_, _, _, _) end,
     },
     buttons = taglist_buttons,
   })
@@ -183,7 +181,7 @@ awful.screen.connect_for_each_screen(function(s)
     y = 0,
     screen = s,
     height = 35,
-    width = 900,
+    width = 1200,
     stretch = false,
     bg = color.base00,
     border_width = 2,
@@ -198,6 +196,7 @@ awful.screen.connect_for_each_screen(function(s)
     expand = "none",
     { -- Left widgets
       layout = wibox.layout.fixed.horizontal,
+      wibox.layout.margin(s.mylayoutbox, 10, 0, 10, 10),
       wibox.layout.margin(mysystray, 10, 0, 10, 10),
       wibox.layout.margin(s.tasklist, 7, 7, 7, 7),
     },

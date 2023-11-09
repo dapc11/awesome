@@ -22,16 +22,16 @@ theme.border_focus = colors.base02
 theme.border_marked = colors.base02
 
 theme.tasklist_font = theme.font
-theme.tag_preview_widget_border_radius = 10
-theme.tag_preview_client_border_radius = 10
-theme.tag_preview_client_opacity = 0.1
-theme.tag_preview_client_bg = colors.base00
-theme.tag_preview_client_border_color = colors.base02
-theme.tag_preview_client_border_width = 2
-theme.tag_preview_widget_bg = colors.base00
-theme.tag_preview_widget_border_color = colors.base02
-theme.tag_preview_widget_border_width = 2
-theme.tag_preview_widget_margin = 0
+-- theme.tag_preview_widget_border_radius = 10
+-- theme.tag_preview_client_border_radius = 10
+-- theme.tag_preview_client_opacity = 0.1
+-- theme.tag_preview_client_bg = colors.base00
+-- theme.tag_preview_client_border_color = colors.base02
+-- theme.tag_preview_client_border_width = 2
+-- theme.tag_preview_widget_bg = colors.base00
+-- theme.tag_preview_widget_border_color = colors.base02
+-- theme.tag_preview_widget_border_width = 2
+-- theme.tag_preview_widget_margin = 0
 
 theme.taglist_fg = colors.base0D
 theme.taglist_fg_empty = colors.base02

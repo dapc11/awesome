@@ -18,19 +18,8 @@ require("keybinds")
 require("bar")
 
 local theme = require("theme.theme")
-local focused_screen = awful.screen.focused()
 
 revelation.init()
-bling.widget.tag_preview.enable({
-  show_client_content = true, -- Whether or not to show the client content
-  placement_fn = function(c)
-    awful.placement.top(
-      c,
-      { parent = focused_screen, preferred_anchors = "middle", preferred_positions = "top", margins = { top = 60 } }
-    )
-  end,
-})
-bling.module.flash_focus.enable()
 bling.widget.window_switcher.enable({
   type = "thumbnail", -- set to anything other than "thumbnail" to disable client previews
 
@@ -122,7 +111,7 @@ awful.rules.rules = {
 
   -- Floating clients.
   { rule_any = {}, properties = { floating = true } },
-  { rule_any = { type = { "normal", "dialog" } }, properties = { titlebars_enabled = true } },
+  { rule_any = { type = { "normal", "dialog" } }, properties = { titlebars_enabled = false } },
 }
 
 -- {{{ Signals
