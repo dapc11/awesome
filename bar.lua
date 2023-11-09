@@ -10,11 +10,17 @@ local beautiful = require("beautiful")
 local theme = require("theme.theme")
 local color = require("colors")
 
+local sharedtags = require("sharedtags")
+local tags = require("tags")
+
 beautiful.init(gfs.get_configuration_dir() .. "theme/theme.lua")
 
 awful.screen.connect_for_each_screen(function(s)
   -- Set tags and default layout
-  awful.tag({ "1", "2", "3", "4", "5" }, s, awful.layout.suit.tile)
+  -- awful.tag({ "1", "2", "3", "4", "5" }, s, awful.layout.suit.tile)
+  -- Assign tags to the newly connected screen here,
+  -- if desired:
+  sharedtags.viewonly(tags.tags[2], s)
 
   s.mylayoutbox = awful.widget.layoutbox(s)
   local taglist_buttons = gears.table.join(

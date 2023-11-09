@@ -8,6 +8,7 @@ local bling = require("bling")
 local cyclefocus = require("cycle")
 local colors = require("colors")
 local theme = require("theme.theme")
+local sharedtags = require("sharedtags")
 
 local xresources = require("beautiful").xresources
 local dpi = xresources.apply_dpi
@@ -74,6 +75,9 @@ local spotify_scratch = bling.module.scratchpad({
   dont_focus_before_close = true,
 })
 
+local tags = require("tags")
+
+-- }}}
 modkey = "Mod4"
 globalkeys = gears.table.join(
   awful.key({ modkey }, "Tab", function()
@@ -198,12 +202,6 @@ globalkeys = gears.table.join(
     description = "decrease the number of columns",
     group = "layout",
   }),
-  awful.key({ modkey }, "<", function()
-    awful.screen.focus_relative(1)
-  end, {
-    description = "focus the next screen",
-    group = "screen",
-  }),
   awful.key({ modkey }, "space", function()
     awful.layout.inc(1)
   end, {
@@ -326,11 +324,30 @@ clientkeys = gears.table.join(
     description = "toggle keep on top",
     group = "client",
   }),
-  awful.key({ modkey, "Control" }, "<", function(c)
-    c:move_to_screen()
+  awful.key({ modkey, "Control" }, "<", function()
+    local tag = awful.screen.focused().selected_tag
+    local target_screen = gears.math.cycle(screen:count(), awful.screen.focused().index - 1)
+    if tag then
+      tag.screen = target_screen
+      tag:view_only()
+      awful.screen.focus(target_screen)
+      local i = 1
+      for t in pairs(root.tags()) do
+        if root.tags()[t].screen.index == target_screen then
+          screen[target_screen].tags[root.tags()[t].index].index = i
+          i = i + 1
+        end
+      end
+    end
   end, {
     description = "move to screen",
     group = "client",
+  }),
+  awful.key({ modkey }, "<", function()
+    awful.screen.focus_relative(1)
+  end, {
+    description = "focus the next screen",
+    group = "screen",
   }),
   -- modkey+Tab: cycle through all clients.
   awful.key({ modkey }, "Tab", function(_)
@@ -349,10 +366,9 @@ for i = 1, 9 do
   globalkeys = gears.table.join(
     globalkeys, -- View tag only.
     awful.key({ modkey }, "#" .. i + 9, function()
-      local screen = awful.screen.focused()
-      local tag = screen.tags[i]
+      local tag = tags.tags[i]
       if tag then
-        tag:view_only()
+        sharedtags.jumpto(tag)
       end
     end, {
       description = "view tag #" .. i,
@@ -360,9 +376,9 @@ for i = 1, 9 do
     }), -- Toggle tag display.
     awful.key({ modkey, "Control" }, "#" .. i + 9, function()
       local screen = awful.screen.focused()
-      local tag = screen.tags[i]
+      local tag = tags.tags[i]
       if tag then
-        awful.tag.viewtoggle(tag)
+        sharedtags.viewtoggle(tag, screen)
       end
     end, {
       description = "toggle tag #" .. i,
@@ -370,7 +386,7 @@ for i = 1, 9 do
     }), -- Move client to tag.
     awful.key({ modkey, "Shift" }, "#" .. i + 9, function()
       if client.focus then
-        local tag = client.focus.screen.tags[i]
+        local tag = tags.tags[i]
         if tag then
           client.focus:move_to_tag(tag)
         end
@@ -381,7 +397,7 @@ for i = 1, 9 do
     }), -- Toggle tag on focused client.
     awful.key({ modkey, "Control", "Shift" }, "#" .. i + 9, function()
       if client.focus then
-        local tag = client.focus.screen.tags[i]
+        local tag = tags.tags[i]
         if tag then
           client.focus:toggle_tag(tag)
         end
