@@ -49,6 +49,38 @@ local function arrange(out)
   return choices
 end
 
+local function simple_menu()
+  local m = {}
+  local out = outputs()
+
+  m[1] = {
+    '<span weight="bold">3 Screens</span>',
+    "xrandr --output DP-2-1-8 --auto --output DP-1-8 --auto --right-of DP-2-1-8 --output DP-1-1-8 --auto --right-of DP-1-8",
+  }
+  m[2] = {
+    '<span weight="bold">Home Office</span>',
+    "xrandr --output eDP-1 --auto --output DP-1-8 --auto --right-of eDP-1",
+  }
+  m[3] = { '<span weight="bold">Laptop</span>', "xrandr --output eDP-1 --auto" }
+  m[4] = { '<span weight="bold">HDMI</span>', "xrandr --output eDP-1 --auto --output HDMI-1 --auto --right-of eDP-1" }
+
+  local choices = arrange(out)
+
+  for i, d in pairs(m) do
+    local cmd = d[2]
+    -- Disable unused outputs
+    for _, choice in pairs(choices) do
+      for _, o in pairs(out) do
+        if not gtable.hasitem(choice, o) then
+          cmd = cmd .. " --output " .. o .. " --off"
+        end
+      end
+    end
+    m[i][2] = cmd
+  end
+  return m
+end
+
 -- Build available choices
 local function menu()
   local m = {}

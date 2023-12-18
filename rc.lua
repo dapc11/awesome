@@ -9,10 +9,9 @@ local bling = require("bling")
 local revelation = require("revelation")
 local colors = require("colors")
 
-beautiful.init(gfs.get_configuration_dir() .. "theme.lua")
+beautiful.init(gfs.get_configuration_dir() .. "theme/theme.lua")
 
 require("awful.autofocus")
-require("awful.hotkeys_popup.keys")
 require("titlebar")
 require("keybinds")
 require("bar")
@@ -52,7 +51,6 @@ beautiful.init(theme_path)
 modkey = "Mod4"
 awful.spawn.with_shell("dunst")
 awful.spawn.with_shell("nm-applet")
-awful.spawn.with_shell("picom")
 awful.spawn.with_shell("gnome-screensaver")
 
 awful.screen.connect_for_each_screen(function(s)
@@ -107,18 +105,24 @@ awful.rules.rules = {
       screen = awful.screen.preferred,
       placement = awful.placement.no_overlap + awful.placement.no_offscreen,
     },
+    callback = function(c)
+      c.maximized, c.maximized_vertical, c.maximized_horizontal = false, false, false
+    end,
   },
 
   -- Floating clients.
-  { rule_any = {}, properties = { floating = true } },
-  { rule_any = { type = { "normal", "dialog" } }, properties = { titlebars_enabled = false } },
+  -- { rule_any = {}, properties = { floating = true } },
+  {
+    rule_any = { type = { "normal", "dialog" } },
+    properties = { titlebars_enabled = false },
+  },
 }
 
 -- {{{ Signals
 -- Signal function to execute when a new client appears.
 client.connect_signal("manage", function(c)
   c.shape = function(cr, w, h)
-    gears.shape.rounded_rect(cr, w, h, 10)
+    gears.shape.rounded_rect(cr, w, h, theme.border_radius)
   end
 end)
 
@@ -134,3 +138,14 @@ client.connect_signal("unfocus", function(c)
   c.border_color = beautiful.border_normal
 end)
 -- }}}
+
+-- Autorun programs in Awesome WM
+autorun = true
+autorunApps = {
+  "xfce4-power-manager",
+}
+if autorun then
+  for app = 1, #autorunApps do
+    awful.util.spawn(autorunApps[app])
+  end
+end

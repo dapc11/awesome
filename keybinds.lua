@@ -14,11 +14,10 @@ local xresources = require("beautiful").xresources
 local dpi = xresources.apply_dpi
 local args = {
   terminal = "wezterm",
-  favorites = { "brave", "WezTerm", "code" },
+  favorites = { "firefox", "WezTerm", "code" },
   apps_per_row = 3,
   apps_per_column = 3,
   app_width = dpi(100),
-  app_height = dpi(50),
   apps_spacing = dpi(5),
   prompt_icon = "",
   prompt_icon_markup = string.format("<span size='x-large' foreground='%s'>%s</span>", colors.base06, ""),
@@ -31,6 +30,7 @@ local args = {
   app_name_font = "SF Pro Display SemiBold 9",
   app_name_normal_color = colors.base06,
   app_name_selected_color = colors.base06,
+  app_show_name = true,
   app_normal_color = colors.base00,
   app_normal_hover_color = colors.base01,
   app_selected_color = colors.base01,
@@ -46,11 +46,10 @@ local args = {
   shape = function(cr, width, height)
     gears.shape.rounded_rect(cr, width, height)
   end,
-  app_content_padding = dpi(10),
+  app_content_padding = dpi(0),
   app_content_spacing = dpi(0),
   app_icon_width = dpi(30),
   app_icon_height = dpi(30),
-  app_name_halign = "left",
   apps_margin = dpi(15),
 }
 local app_launcher = bling.widget.app_launcher(args)
@@ -77,7 +76,10 @@ local spotify_scratch = bling.module.scratchpad({
 
 local tags = require("tags")
 
--- }}}
+local function run_cmd(cmd)
+  spawn.with_shell("sleep 0.5 && " .. cmd)
+end
+
 modkey = "Mod4"
 globalkeys = gears.table.join(
   awful.key({ modkey }, "Tab", function()
@@ -99,6 +101,18 @@ globalkeys = gears.table.join(
     term_scratch:toggle()
   end, {
     description = "toggle terminal",
+    group = "client",
+  }),
+  awful.key({ modkey }, "j", function()
+    awful.client.focus.byidx(1)
+  end, {
+    description = "focus next by index",
+    group = "client",
+  }),
+  awful.key({ modkey }, "k", function()
+    awful.client.focus.byidx(-1)
+  end, {
+    description = "focus previous by index",
     group = "client",
   }),
   awful.key({ modkey }, "Down", function()
@@ -178,18 +192,18 @@ globalkeys = gears.table.join(
     description = "decrease master width factor",
     group = "layout",
   }),
-  -- awful.key({ "Control", "Shift" }, "h", function()
-  --   awful.tag.incnmaster(1, nil, true)
-  -- end, {
-  --   description = "increase the number of master clients",
-  --   group = "layout",
-  -- }),
-  -- awful.key({ "Control", "Shift" }, "l", function()
-  --   awful.tag.incnmaster(-1, nil, true)
-  -- end, {
-  --   description = "decrease the number of master clients",
-  --   group = "layout",
-  -- }),
+  awful.key({ "Mod1", "Shift" }, "h", function()
+    awful.tag.incnmaster(1, nil, true)
+  end, {
+    description = "increase the number of master clients",
+    group = "layout",
+  }),
+  awful.key({ "Mod1", "Shift" }, "l", function()
+    awful.tag.incnmaster(-1, nil, true)
+  end, {
+    description = "decrease the number of master clients",
+    group = "layout",
+  }),
   awful.key({ modkey, "Control" }, "h", function()
     awful.tag.incncol(1, nil, true)
   end, {
@@ -232,60 +246,51 @@ globalkeys = gears.table.join(
     awful.screen.focused().mypromptbox:run()
   end),
   awful.key({ modkey }, "i", hotkeys_popup.show_help, { description = "show help", group = "awesome" }),
-  awful.key({}, "Print", function()
-    spawn.easy_async([[sh -c 'pacmd list-cards | grep index | tail -1 | xargs | cut -d" " -f 2']], function(stdout)
-      local index = stdout:gsub("[\n\r]", " ")
-      spawn.easy_async(string.format([[sh -c 'pactl set-card-profile %s a2dp_sink']], index), function() end)
-    end)
-  end, {
-    description = "Set hifi audio profile",
-    group = "sound",
-  }),
   awful.key({ modkey }, "section", function()
     spawn.easy_async([[sh -c 'pacmd list-cards | grep index | tail -1 | xargs | cut -d" " -f 2']], function(stdout)
       local index = stdout:gsub("[\n\r]", " ")
-      spawn.easy_async(string.format([[sh -c 'pactl set-card-profile %s a2dp_sink']], index), function() end)
+      run_cmd(string.format("pactl set-card-profile %s a2dp_sink", index))
     end)
   end, {
     description = "Set hifi audio profile",
     group = "sound",
   }),
   awful.key({}, "XF86AudioMicMute", function()
-    spawn.easy_async([[sh -c 'pactl set-source-mute @DEFAULT_SOURCE@ toggle']], function() end)
+    run_cmd("pactl set-source-mute @DEFAULT_SOURCE@ toggle")
   end, { description = "mute microphone", group = "sound" }),
   awful.key({}, "XF86AudioPrev", function()
-    spawn.easy_async(
-      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous']],
-      function() end
+    run_cmd(
+      "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous"
     )
   end, { description = "previous song", group = "sound" }),
   awful.key({}, "XF86AudioPlay", function()
-    spawn.easy_async(
-      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause']],
-      function() end
+    run_cmd(
+      "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause"
     )
   end, { description = "play/pause song", group = "sound" }),
   awful.key({}, "XF86AudioNext", function()
-    spawn.easy_async(
-      [[sh -c 'dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next']],
-      function() end
+    run_cmd(
+      "dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next"
     )
   end, { description = "next song", group = "sound" }),
   awful.key({}, "XF86AudioMute", function()
-    spawn.easy_async([[sh -c 'amixer -D pulse -q set Master toggle']], function() end)
+    run_cmd("amixer -D pulse -q set Master toggle")
   end, { description = "toggle mtue volume", group = "sound" }),
   awful.key({}, "XF86AudioLowerVolume", function()
-    spawn.easy_async([[sh -c 'amixer -q -D pulse sset Master 3%- unmute']], function() end)
+    run_cmd("amixer -q -D pulse sset Master 3%- unmute")
   end, { description = "descrease volume", group = "sound" }),
   awful.key({}, "XF86AudioRaiseVolume", function()
-    spawn.easy_async([[sh -c 'amixer -q -D pulse sset Master 3%+ unmute']], function() end)
+    run_cmd("amixer -q -D pulse sset Master 3%+ unmute")
   end, { description = "increase volume", group = "sound" }),
   awful.key({ modkey }, "l", function()
-    spawn.easy_async(
-      [[sh -c 'dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock']]
+    run_cmd(
+      "dbus-send --type=method_call --dest=org.gnome.ScreenSaver /org/gnome/ScreenSaver org.gnome.ScreenSaver.Lock"
     )
   end),
-  awful.key({ modkey }, "s", revelation)
+  awful.key({ modkey }, "s", revelation),
+  awful.key({}, "Print", function()
+    run_cmd("scrot --line width=3 --select --delay 1 '%Y-%m-%d_$wx$h_scrot.png' -e 'mv $f ~/Pictures/'")
+  end, { description = "Screenshot" })
 )
 
 clientkeys = gears.table.join(

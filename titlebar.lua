@@ -2,7 +2,6 @@ pcall(require, "luarocks.loader")
 local gears = require("gears")
 local awful = require("awful")
 local wibox = require("wibox")
-require("awful.hotkeys_popup.keys")
 
 client.connect_signal("request::titlebars", function(c)
   -- buttons for the titlebar

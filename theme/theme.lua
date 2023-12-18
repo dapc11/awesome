@@ -14,12 +14,12 @@ theme.bg_urgent = colors.base00
 theme.bg_minimize = colors.base00
 theme.bg_systray = theme.bg_normal
 
-theme.useless_gap = 10
+theme.useless_gap = 0
 theme.border_width = 2
-theme.border_radius = 20
-theme.border_normal = colors.base02
-theme.border_focus = colors.base02
-theme.border_marked = colors.base02
+theme.border_radius = 0
+theme.border_normal = colors.base04
+theme.border_focus = colors.base06
+theme.border_marked = colors.base08
 
 theme.tasklist_font = theme.font
 -- theme.tag_preview_widget_border_radius = 10
@@ -32,6 +32,19 @@ theme.tasklist_font = theme.font
 -- theme.tag_preview_widget_border_color = colors.base02
 -- theme.tag_preview_widget_border_width = 2
 -- theme.tag_preview_widget_margin = 0
+theme.tabbar_bg_normal = colors.base00
+theme.tabbar_fg_normal = colors.base06
+theme.tabbar_bg_focus = colors.base02
+theme.tabbar_fg_focus = colors.base06
+-- theme.tabbar_bg_focus_inactive
+-- theme.tabbar_fg_focus_inactive
+-- theme.tabbar_bg_normal_inactive
+-- theme.tabbar_fg_normal_inactive
+theme.tabbar_font = theme.font
+-- theme.tabbar_size
+-- theme.tabbar_position
+
+
 
 theme.taglist_fg = colors.base0D
 theme.taglist_fg_empty = colors.base02
@@ -52,26 +65,26 @@ theme.titlebar_floating_button_normal_active = gfs.get_configuration_dir() .. "t
 theme.titlebar_floating_button_focus_active = gfs.get_configuration_dir() .. "theme/titlebar/floating.png"
 theme.titlebar_floating_button_focus_active_hover = gfs.get_configuration_dir() .. "theme/titlebar/floating_hover.png"
 theme.titlebar_floating_button_focus_inactive_hover = gfs.get_configuration_dir() .. "theme/titlebar/floating_hover.png"
-theme.parent_filter_list = {
-  "google-chrome",
-  "Google-chrome",
-  "firefox",
-  "Gimp",
-  "microsoft teams - preview",
-  "Microsoft Teams - Preview",
-  "Evolution",
-  "Firefox",
-} -- class names list of parents that should not be swallowed
-theme.child_filter_list = {
-  "Dragon",
-  "microsoft teams - preview",
-  "Microsoft Teams - Preview",
-  "Evolution",
-  "Google-chrome",
-  "google-chrome",
-  "firefox",
-  "Firefox",
-} -- class names list that should not swallow their parents
--- theme.swallowing_filter = true -- whether the filters above should be active
-
+-- theme.parent_filter_list = {
+--   -- "google-chrome",
+--   -- "Google-chrome",
+--   -- "firefox",
+--   "Gimp",
+--   -- "microsoft teams - preview",
+--   -- "Microsoft Teams - Preview",
+--   "Evolution",
+--   -- "Firefox",
+-- } -- class names list of parents that should not be swallowed
+-- theme.child_filter_list = {
+--   "Dragon",
+--   -- "microsoft teams - preview",
+--   -- "Microsoft Teams - Preview",
+--   "Evolution",
+--   -- "Google-chrome",
+--   -- "google-chrome",
+--   -- "firefox",
+--   -- "Firefox",
+-- }                               -- class names list that should not swallow their parents
+-- theme.swallowing_filter = false -- whether the filters above should be active
+--
 return theme

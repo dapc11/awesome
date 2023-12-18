@@ -10,18 +10,9 @@ local beautiful = require("beautiful")
 local theme = require("theme.theme")
 local color = require("colors")
 
-local sharedtags = require("sharedtags")
-local tags = require("tags")
-
 beautiful.init(gfs.get_configuration_dir() .. "theme/theme.lua")
 
 awful.screen.connect_for_each_screen(function(s)
-  -- Set tags and default layout
-  -- awful.tag({ "1", "2", "3", "4", "5" }, s, awful.layout.suit.tile)
-  -- Assign tags to the newly connected screen here,
-  -- if desired:
-  sharedtags.viewonly(tags.tags[2], s)
-
   s.mylayoutbox = awful.widget.layoutbox(s)
   local taglist_buttons = gears.table.join(
     awful.button({}, 1, function(t)
@@ -175,26 +166,26 @@ awful.screen.connect_for_each_screen(function(s)
   local logout_menu = require("widgets.logout-menu-widget.logout-menu")
 
   -- Clock
-  local myclock = awful.widget.textclock("<span font='" .. theme.font .. "'>   %Y-%m-%d %H:%M:%S </span>", 5)
+  local myclock = wibox.widget.textclock("<span font='" .. theme.font .. "'>   %Y-%m-%d %H:%M:%S </span>", 5)
 
   -- Create the top bar
   s.wibar = awful.wibar({
     shape = function(cr, w, h)
-      gears.shape.rounded_rect(cr, w, h, 10)
+      gears.shape.rounded_rect(cr, w, h, theme.border_radius)
     end,
     position = "top",
     x = 0,
     y = 0,
     screen = s,
     height = 35,
-    width = 1200,
-    stretch = false,
+    width = awful.screen.focused().workarea.width,
+    stretch = true,
     bg = color.base00,
-    border_width = 2,
-    border_color = color.base02,
+    border_width = 1,
+    border_color = color.base01,
   })
 
-  s.wibar.y = 10
+  s.wibar.y = 0
 
   -- Add widgets
   s.wibar:setup({
@@ -202,23 +193,23 @@ awful.screen.connect_for_each_screen(function(s)
     expand = "none",
     { -- Left widgets
       layout = wibox.layout.fixed.horizontal,
-      wibox.layout.margin(s.mylayoutbox, 10, 0, 10, 10),
-      wibox.layout.margin(mysystray, 10, 0, 10, 10),
-      wibox.layout.margin(s.tasklist, 7, 7, 7, 7),
+      wibox.container.margin(s.mylayoutbox, 10, 0, 10, 10),
+      wibox.container.margin(mysystray, 10, 0, 10, 10),
+      wibox.container.margin(s.tasklist, 7, 7, 7, 7),
     },
     {
       layout = wibox.layout.fixed.horizontal,
       {
-        wibox.layout.margin(s.taglist, 7, 7, 7, 7),
+        wibox.container.margin(s.taglist, 7, 7, 7, 7),
         widget = wibox.container.background,
       },
     },
     { -- Right widgets
       layout = wibox.layout.fixed.horizontal,
-      wibox.layout.margin(volume({ font = theme.font }), 0, 5, 10, 10),
-      wibox.layout.margin(battery({ font = theme.font, show_current_level = true }), 0, 5, 10, 10),
-      wibox.layout.margin(myclock, 0, 5, 7, 7),
-      wibox.layout.margin(logout_menu({ font = theme.font }), 0, 5, 7, 7),
+      wibox.container.margin(volume({ font = theme.font }), 0, 5, 10, 10),
+      wibox.container.margin(battery({ font = theme.font, show_current_level = true }), 0, 5, 10, 10),
+      wibox.container.margin(myclock, 0, 5, 7, 7),
+      wibox.container.margin(logout_menu({ font = theme.font }), 0, 5, 7, 7),
     },
   })
 end)
