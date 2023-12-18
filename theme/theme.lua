@@ -44,8 +44,6 @@ theme.tabbar_font = theme.font
 -- theme.tabbar_size
 -- theme.tabbar_position
 
-
-
 theme.taglist_fg = colors.base0D
 theme.taglist_fg_empty = colors.base02
 theme.taglist_fg_occupied = colors.base05
