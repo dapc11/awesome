@@ -76,17 +76,24 @@ local function worker(user_args)
     bg = colors.base00,
     border_width = 2,
     border_color = colors.base02,
-    offset = { x = 10 },
+    placement = function(c)
+      awful.placement.top_right(c, { honor_workarea = true, margins = { top = 10, right = 10 } })
+    end,
     widget = {},
   })
   local notification
   local function build_header_row(text)
     return wibox.widget({
       {
-        text = text,
-        font = theme.font,
+        {
+          text = text,
+          font = theme.font,
+          align = "center",
+          widget = wibox.widget.textbox,
+        },
         align = "center",
-        widget = wibox.widget.textbox,
+        margins = 8,
+        layout = wibox.container.margin,
       },
       bg = beautiful.bg_normal,
       fg = beautiful.fg_normal,
