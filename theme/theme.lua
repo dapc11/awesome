@@ -3,7 +3,7 @@ local colors = require("colors")
 
 local theme = {}
 
-theme.font = "SF Pro Display 11"
+theme.font = "SF Pro Display 12"
 theme.modkey = "Mod4"
 
 theme.dir = string.format("%s/.config/awesome/theme/", os.getenv("HOME"))
@@ -17,8 +17,8 @@ theme.bg_systray = theme.bg_normal
 theme.useless_gap = 0
 theme.border_width = 2
 theme.border_radius = 0
-theme.border_normal = colors.base04
-theme.border_focus = colors.base06
+theme.border_normal = colors.base01
+theme.border_focus = colors.base04
 theme.border_marked = colors.base08
 
 theme.tasklist_font = theme.font
