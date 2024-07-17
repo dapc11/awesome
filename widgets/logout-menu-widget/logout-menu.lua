@@ -33,7 +33,9 @@ local popup = awful.popup({
   border_width = 2,
   border_color = colors.base02,
   maximum_width = 400,
-  offset = { x = 10 },
+    placement = function(c)
+      awful.placement.top_right(c, { honor_workarea = true, margins = { top = 10, right = 10 } })
+    end,
   widget = {},
 })
 
