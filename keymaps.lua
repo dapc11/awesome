@@ -7,54 +7,45 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 local bling = require("bling")
 local cyclefocus = require("cycle")
 local colors = require("colors")
-local theme = require("theme.theme")
 local sharedtags = require("sharedtags")
 
 local xresources = require("beautiful").xresources
 local dpi = xresources.apply_dpi
-local args = {
-  terminal = "wezterm",
-  favorites = { "firefox", "WezTerm", "code" },
-  apps_per_row = 3,
-  apps_per_column = 3,
-  app_width = dpi(100),
-  apps_spacing = dpi(5),
-  prompt_icon = "",
-  prompt_icon_markup = string.format("<span size='x-large' foreground='%s'>%s</span>", colors.base06, ""),
-  prompt_text = "",
-  prompt_icon_font = theme.font,
-  prompt_icon_color = colors.base06,
-  prompt_height = dpi(40),
-  prompt_margins = dpi(0),
-  prompt_paddings = dpi(5),
-  app_name_font = "SF Pro Display SemiBold 9",
-  app_name_normal_color = colors.base06,
-  app_name_selected_color = colors.base06,
-  app_show_name = true,
-  app_normal_color = colors.base00,
-  app_normal_hover_color = colors.base01,
-  app_selected_color = colors.base01,
-  app_selected_hover_color = colors.base02,
-  prompt_font = theme.font,
-  prompt_text_color = colors.base06,
-  prompt_cursor_color = colors.base02,
-  prompt_color = colors.base01,
-  background = colors.base00,
-  app_shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height)
-  end,
-  shape = function(cr, width, height)
-    gears.shape.rounded_rect(cr, width, height)
-  end,
+local app_launcher_args = {
   app_content_padding = dpi(0),
   app_content_spacing = dpi(0),
-  app_icon_width = dpi(30),
-  app_icon_height = dpi(30),
-  apps_margin = dpi(15),
+  app_name_font = "JetBrainsMono 10",
+  app_name_selected_color = colors.base07,
+  app_normal_color = colors.base01,
+  app_normal_hover_color = colors.base01,
+  app_selected_color = colors.base02,
+  app_show_name = true,
+  app_width = 200,
+  apps_margin = dpi(0),
+  apps_per_column = 4,
+  apps_per_row = 3,
+  apps_spacing = dpi(0),
+  background = colors.base01,
+  favorites = { "kitty"},
+  prompt_color = colors.base02,
+  prompt_cursor_color = colors.base04,
+  prompt_font = "JetBrainsMono 10",
+  prompt_height = dpi(40),
+  prompt_icon = "",
+  prompt_icon_color = colors.base07,
+  prompt_icon_font = "JetBrainsMono 10",
+  prompt_icon_markup = string.format("<span size='x-large' foreground='%s'>%s</span>", colors.base07, " "),
+  prompt_margins = dpi(0),
+  prompt_paddings = dpi(0),
+  prompt_text = "",
+  prompt_text_color = colors.base07,
+  border_color = colors.base02,
+  terminal = "kitty",
+  app_show_generic_name = false
 }
-local app_launcher = bling.widget.app_launcher(args)
+local app_launcher = bling.widget.app_launcher(app_launcher_args)
 local term_scratch = bling.module.scratchpad({
-  command = "wezterm start --class spad",
+  command = "kitty --class spad",
   rule = { instance = "spad" },
   sticky = true,
   autoclose = false,
@@ -64,7 +55,7 @@ local term_scratch = bling.module.scratchpad({
   dont_focus_before_close = true,
 })
 local spotify_scratch = bling.module.scratchpad({
-  command = "spotfy",
+  command = "spotify",
   rule = { instance = "spotify" },
   sticky = true,
   autoclose = false,
@@ -162,7 +153,7 @@ globalkeys = gears.table.join(
     group = "client",
   }), -- Standard program
   awful.key({ modkey }, "Return", function()
-    awful.spawn("wezterm")
+    awful.spawn("kitty")
   end, {
     description = "open a terminal",
     group = "launcher",
@@ -171,9 +162,6 @@ globalkeys = gears.table.join(
     description = "reload awesome",
     group = "awesome",
   }),
-  -- awful.key({ modkey }, "s", function()
-  --   awful.menu.client_list({ theme = { width = 500, border_width = 10 } })
-  -- end, { description = "show client list", group = "awesome" }),
   awful.key({ modkey }, "d", function()
     app_launcher:toggle()
   end, {

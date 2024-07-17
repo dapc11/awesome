@@ -13,7 +13,7 @@ beautiful.init(gfs.get_configuration_dir() .. "theme/theme.lua")
 
 require("awful.autofocus")
 require("titlebar")
-require("keybinds")
+require("keymaps")
 require("bar")
 
 local theme = require("theme.theme")
